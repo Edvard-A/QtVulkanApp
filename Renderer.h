@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "VisualObject.h"
 #include "Utilities.h"
+#include "enemy.h"
 
 class Renderer : public QVulkanWindowRenderer
 {
@@ -107,6 +108,7 @@ private:
 
     Camera mCamera;
     class VulkanWindow* mVulkanWindow{ nullptr };
+    class Enemy* mEnemy{ nullptr };
 
 	VkCommandBuffer beginTransientCommandBuffer();
 	void endTransientCommandBuffer(VkCommandBuffer commandBuffer);

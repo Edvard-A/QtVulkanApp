@@ -34,3 +34,23 @@ void VisualObject::setPosition(float x, float y, float z)
     mMatrix(1, 3) = y; // Position in the y-axis
     mMatrix(2, 3) = z; // Position in the z-axis
 }
+
+void VisualObject::moveEnemy()
+{
+
+    if(this->getPosition().x() < 1.f && !isEndReached)
+    {
+        //qDebug("this function was called!");
+        mMatrix.translate(0.005f, 0.f, 0.f);
+    } else{
+        isEndReached = true;
+        mMatrix.translate(0.f, 0.f, 0.f);
+    }
+
+    if(this->getPosition().x() > 0 && isEndReached)
+    {
+        mMatrix.translate(-0.005f, 0.f, 0.f);
+    } else{
+        isEndReached = false;
+    }
+}

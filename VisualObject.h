@@ -15,6 +15,8 @@ public:
     void scale(float s);
     void rotate(float t, float x, float y, float z);
 
+    void moveEnemy();
+
 	//Setters and Getters
     inline std::vector<Vertex> getVertices() { return mVertices; }
     inline VkBuffer& getVBuffer() { return mVertexBuffer.mBuffer; }
@@ -46,6 +48,8 @@ protected:
     //VkPrimitiveTopology mTopology{ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST }; //not used
 
     int drawType{ 0 }; // 0 = fill, 1 = line
+
+    bool isEndReached = false;
 };
 
 #endif // VISUALOBJECT_H
