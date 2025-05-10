@@ -23,6 +23,7 @@ public:
     void setSelectedObject(VisualObject* object) { mSelectedObject = object; }
 
     void handleInput();
+    void movePlayer();
 
 signals:
     void frameQueued(int colorValue);
@@ -45,6 +46,7 @@ private:
     void setCameraSpeed(float value);
     Input mInput;
     float mCameraSpeed{0.005f};
+    float mPlayerSpeed{0.1f};
     float mCameraRotateSpeed{ -0.1f };
     int mMouseXlast{0}; //for mouse rotate input
     int mMouseYlast{0};

@@ -9,6 +9,7 @@
 #include "HeightMap.h"
 #include "stb_image.h"
 #include "ObjMesh.h"
+#include "player.h"
 
 /*** Renderer class ***/
 Renderer::Renderer(QVulkanWindow *w, bool msaa)
@@ -31,12 +32,14 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back((new WorldAxis()));
 	mObjects.push_back(new HeightMap());
     mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));
+    mObjects.push_back(new Player());
     // Dag 030225
     mObjects.at(0)->setName("tri");
     mObjects.at(1)->setName("quad");
     mObjects.at(2)->setName("axis");
 	mObjects.at(3)->setName("terrain");
     mObjects.at(4)->setName("suzanne");
+    mObjects.at(5)->setName("player");
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
 
     // **************************************
@@ -307,6 +310,7 @@ void Renderer::startNextFrame()
     //Handeling input from keyboard and mouse is done in VulkanWindow
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
+    mVulkanWindow->movePlayer();
     mCamera.update();               //input can have moved the camera
 
     VkCommandBuffer commandBuffer = mWindow->currentCommandBuffer();
