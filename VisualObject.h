@@ -17,6 +17,8 @@ public:
 
     void moveEnemy();
 
+    bool isColliding(VisualObject* otherObject);
+
 	//Setters and Getters
     inline std::vector<Vertex> getVertices() { return mVertices; }
     inline VkBuffer& getVBuffer() { return mVertexBuffer.mBuffer; }

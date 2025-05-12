@@ -54,3 +54,15 @@ void VisualObject::moveEnemy()
         isEndReached = false;
     }
 }
+
+bool VisualObject::isColliding(VisualObject* otherObject)
+{
+    if( (this->getPosition().x() - otherObject->getPosition().x()) < 1 &&
+        /*this->getPosition().y() - otherObject->getPosition().y() > 1 &&*/
+        (this->getPosition().z() - otherObject->getPosition().z()) < 1)
+    {
+        qDebug("colliding!");
+        return true;
+    } else
+        return false;
+}

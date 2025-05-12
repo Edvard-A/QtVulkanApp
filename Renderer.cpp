@@ -34,6 +34,8 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));
     mObjects.push_back(new Player());
     mObjects.push_back(new Enemy());
+    mObjects.push_back(new ObjMesh(assetPath + "cylinder.obj"));
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
     // Dag 030225
     mObjects.at(0)->setName("tri");
     mObjects.at(1)->setName("quad");
@@ -42,8 +44,15 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(4)->setName("suzanne");
     mObjects.at(5)->setName("player");
     mObjects.at(6)->setName("enemy");
+    mObjects.at(7)->setName("cylinder");
+    mObjects.at(8)->setName("sphere");
+
+
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
-    mObjects.at(6)->move(0.f, 1.f, 0.f);
+    mObjects.at(6)->move(0.f, 0.f, -5.f);
+    mObjects.at(7)->move(-3.f, 0.f, 0.f);
+    mObjects.at(8)->scale(2);
+    mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
     // **************************************
     // Objects in optional map
     // **************************************
@@ -51,7 +60,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
         mMap.insert(std::pair<std::string, VisualObject*>{(*it)->getName(),*it});
 
 	//Inital position of the camera
-    mCamera.setPosition(QVector3D(-0.5, -0.5, -16));
+    mCamera.setPosition(QVector3D(-0.5, -15, -32));
 
     //Need access to our VulkanWindow so making a convenience pointer
     mVulkanWindow = dynamic_cast<VulkanWindow*>(w);
@@ -313,7 +322,8 @@ void Renderer::startNextFrame()
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
-    mObjects.at(6)->moveEnemy();
+    mObjects.at(5)->isColliding(mObjects.at(6));
+    //mObjects.at(6)->moveEnemy();
     mCamera.update();               //input can have moved the camera
 
     VkCommandBuffer commandBuffer = mWindow->currentCommandBuffer();
