@@ -45,7 +45,7 @@ protected:
 private:
     void setCameraSpeed(float value);
     Input mInput;
-    float mCameraSpeed{0.005f};
+    float mCameraSpeed{0.1f};
     float mPlayerSpeed{0.1f};
     float mCameraRotateSpeed{ -0.1f };
     int mMouseXlast{0}; //for mouse rotate input
