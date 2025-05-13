@@ -49,10 +49,10 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
 
 
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
-    mObjects.at(6)->move(0.f, 0.f, -5.f);
-    mObjects.at(7)->move(-3.f, 0.f, 0.f);
-    mObjects.at(8)->move(-3.f, 0.5f, 0.f);
-    mObjects.at(8)->scale(3.f);
+    mObjects.at(6)->move(0.f, 0.f, -16.f);
+    mObjects.at(7)->move(-3.f, 1.f, 0.f);
+    mObjects.at(8)->move(-3.f, 2.f, 0.f);
+    mObjects.at(8)->scale(5.f);
     mObjects.at(7)->scaleUneven(1.f, 2.f, 1.f);
     mObjects.at(4)->setTextureType(1);
     mObjects.at(7)->setTextureType(3);
