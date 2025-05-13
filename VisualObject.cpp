@@ -118,14 +118,3 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
 
     }
 }
-
-void VisualObject::setRadius(float r)
-{
-    radius = r;
-}
-
-void VisualObject::createBoundingSphere(QVector3D center, float r)
-{
-    this->vecSetPosition(center);
-    new BoundingSphere(r);
-}
