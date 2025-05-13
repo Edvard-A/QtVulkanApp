@@ -113,12 +113,15 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
     else
     {
         //if(this->getPosition() != anchor) //<- Might be better to use this
-        if( sqrt((this->getPosition().x() - anchor.x()) * (this->getPosition().x() - anchor.x())) > 0.1f &&
-            sqrt((this->getPosition().z() - anchor.z()) * (this->getPosition().z() - anchor.z())) > 0.1f)
+        if( sqrt((this->getPosition().x() - returnToThis.x()) * (this->getPosition().x() - returnToThis.x())) > 0.002f &&
+            sqrt((this->getPosition().z() - returnToThis.z()) * (this->getPosition().z() - returnToThis.z())) > 0.002f)
+        //if( (this->getPosition().x() - returnToThis.x()).length() &&
+        //    (this->getPosition().z() - returnToThis.z()).length())
         {
             //qDebug("Enemy is moving!");
 
-            if(this->getPosition().x() < anchor.x())
+            if(this->getPosition().x() < returnToThis.x())
+            {
                 this->move(speed, 0, 0);
             if(this->getPosition().x() > anchor.x())
                 this->move(-speed, 0, 0);
@@ -158,6 +161,10 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
         QVector3D pos = calclulateDeCastiljau(mP0, mP1, mP2, mP3, mT);
         qDebug() << "position is: " << pos;
         setXZPosition(pos.x(), pos.z());
+        returnToThis.setX(pos.x());
+        returnToThis.setZ(pos.z());
+        //qDebug() << "Anchor is: " << returnToThis;
+        //qDebug() << "mT is: " << mT;
         //if(this->getPosition().x() < 5.f && this->getPosition().z() < (-5) && !isEndReached) // x < end.x() && z < end.z()
         //{
         //    qDebug("this function was called!");
