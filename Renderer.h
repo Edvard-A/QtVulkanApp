@@ -72,7 +72,11 @@ protected:
     //From Obj branch:
     VkPipelineCache mPipelineCache{ VK_NULL_HANDLE };
     VkPipelineLayout mPipelineLayout{ VK_NULL_HANDLE };
+
+    // keep an eye on this one
     VkPipeline mPipeline1{ VK_NULL_HANDLE };
+
+
 
     VkQueue mGraphicsQueue{ VK_NULL_HANDLE };
 
@@ -102,7 +106,7 @@ private:
 
     //Texture variables
     VkSurfaceFormatKHR mSurfaceFormat{};
-    TextureHandle mTextureHandle[3]; // can make into an array to hold multiple texture assets
+    TextureHandle mTextureHandle[5]; // can make into an array to hold multiple texture assets
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags requiredProperties);
 
