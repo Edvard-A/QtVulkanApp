@@ -36,6 +36,12 @@ void VisualObject::setPosition(float x, float y, float z)
 }
 
 void VisualObject::vecSetPosition(QVector3D newPosition)
+{
+    mMatrix(0, 3) = newPosition.x(); // Position in the x-axis
+    mMatrix(1, 3) = newPosition.y(); // Position in the y-axis
+    mMatrix(2, 3) = newPosition.z(); // Position in the z-axis
+}
+
 void VisualObject::moveEnemy()
 {
 
