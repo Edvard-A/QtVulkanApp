@@ -60,9 +60,11 @@ protected:
     int textureType{0};
     enum textureType
     {
-        dog = 0,
-        orange = 1,
-        mark = 2
+        dog      = 0,
+        orange   = 1,
+        mark     = 2,
+        pink     = 3,
+        height   = 4
     };
 
     bool isEndReached = false;
