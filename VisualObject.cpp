@@ -40,6 +40,12 @@ void VisualObject::setPosition(float x, float y, float z)
     mMatrix(2, 3) = z; // Position in the z-axis
 }
 
+void VisualObject::setXZPosition(float x, float z)
+{
+    mMatrix(0, 3) = x; // Position in the x-axis
+    mMatrix(2, 3) = z; // Position in the z-axis
+}
+
 void VisualObject::vecSetPosition(QVector3D newPosition)
 {
     mMatrix(0, 3) = newPosition.x(); // Position in the x-axis
@@ -79,11 +85,12 @@ bool VisualObject::isColliding(VisualObject* otherObject)
 
 void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D anchor)
 {
+    qDebug() << "is enemy chasing?: " << bIsChasing;
     if(this->isColliding(otherObject))
     {
         //qDebug() << "Player position is: " << otherObject->getPosition();
         //qDebug() << "Enemy position is: " << this->getPosition();
-
+        bIsChasing = true;
         if(this->getPosition().x() < otherObject->getPosition().x())
             this->move(speed, 0, 0);
         if(this->getPosition().x() > otherObject->getPosition().x())
@@ -104,11 +111,12 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
     }
     else
     {
-        if(this->getPosition() != anchor) //<- Might be better to use this
-        //if(sqrt((this->getPosition().x() - anchor.x()) * (this->getPosition().x() - anchor.x())) > 0.1f &&
-        //    sqrt((this->getPosition().z() - anchor.z()) * (this->getPosition().z() - anchor.z())) > 0.1f)
+        //if(this->getPosition() != anchor) //<- Might be better to use this
+        if(sqrt((this->getPosition().x() - anchor.x()) * (this->getPosition().x() - anchor.x())) > 0.1f &&
+            sqrt((this->getPosition().z() - anchor.z()) * (this->getPosition().z() - anchor.z())) > 0.1f)
         {
             //qDebug("Enemy is moving!");
+
             if(this->getPosition().x() < anchor.x())
                 this->move(speed, 0, 0);
             if(this->getPosition().x() > anchor.x())
@@ -119,7 +127,71 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
                 this->move(0, 0, -speed);
         }
         else
+            bIsChasing = false;
             qDebug("enemy is not moving!");
 
     }
+    if(!bIsChasing)
+    {
+        if(this->getPosition().x() < 5.f && this->getPosition().z() < (-5) && !isEndReached) // x < end.x() && z < end.z()
+        {
+            qDebug("this function was called!");
+            mMatrix.translate(5.f / 100, 0.f, 11.f / 100); // translate(end.x() / speed?, 0, end.z() / speed?)
+        } else{
+            isEndReached = true;
+        }
+
+        if(this->getPosition().x() > 0 && this->getPosition().z() > -16 && isEndReached)
+        {
+            mMatrix.translate(-5.f / 100, 0.f, -11.f / 100);
+        } else{
+            isEndReached = false;
+        }
+    }
+}
+
+QVector3D VisualObject::calclulateDeCastiljau(QVector3D p0, QVector3D p1, QVector3D p2, QVector3D p3, float t)
+{
+    // QVector2D b10, b11, b12;
+    // b10 =
+
+    // return QVector3D(1, 1, 1);
+    QVector3D a = (1-t)* p0 + t * p1;
+    QVector3D b = (1-t)* p1 + t * p2;
+    QVector3D c = (1-t)* p2 + t * p3;
+
+    QVector3D Q1 = (1-t)* a + t * b;
+    QVector3D Q2 = (1-t)* b + t * c;
+
+    QVector3D R = (1-t) * Q1 + t * Q2;
+
+
+    return R;
+}
+
+void VisualObject::gooner() //(QVector3D p0, QVector3D p1, QVector3D p2, QVector3D p3)
+{
+
+    //qDebug() << "mT is: " << mT;
+    //qDebug() << "is going forward?: " << mbIsForward;
+    if (mbIsForward)
+        mT += bezierSpeed;
+    else
+        mT -= bezierSpeed;
+
+    if (mT >= 1.0f){
+        mT = 1.0f;
+        mbIsForward = false;
+    }
+
+    else if (mT <= 0.0f)
+    {
+        mT = 0.0f;
+        mbIsForward = true;
+    }
+
+    QVector3D pos = calclulateDeCastiljau(mP0, mP1, mP2, mP3, mT);
+    qDebug() << "position is: " << pos;
+    setXZPosition(pos.x(), pos.z());
+
 }

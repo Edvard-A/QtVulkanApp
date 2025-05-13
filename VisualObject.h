@@ -21,6 +21,12 @@ public:
     bool isColliding(VisualObject* otherObject);
     void chase(VisualObject* otherObject, float speed, QVector3D anchor);
 
+    // bezier curve functions
+    //QVector3D CalculateBezier(float t, int d);
+    QVector3D calclulateDeCastiljau(QVector3D p0, QVector3D p1, QVector3D p2, QVector3D p3, float t);
+    //void gooner(QVector3D p0, QVector3D p1, QVector3D p2, QVector3D p3);
+    void gooner();
+
 	//Setters and Getters
     inline std::vector<Vertex> getVertices() { return mVertices; }
     inline VkBuffer& getVBuffer() { return mVertexBuffer.mBuffer; }
@@ -42,6 +48,7 @@ public:
 
     QVector3D getPosition();
     void setPosition(float x, float y, float z);
+    void setXZPosition(float x, float z);
     void vecSetPosition(QVector3D newPosition);
 
 protected:
@@ -68,8 +75,17 @@ protected:
     };
 
     bool isEndReached = false;
+    bool bIsChasing = false;
 
-    float radius;
+    // bezier curve variables
+    bool mbIsForward = true;
+    float mT{0};
+    float bezierSpeed{0.005f};
+
+    QVector3D mP0 = QVector3D(  -2.5f, 0.f, -2.f   );
+    QVector3D mP1 = QVector3D(   1.f,  0.f, -0.5f  );
+    QVector3D mP2 = QVector3D(  -1.5f, 0.f,  1.f   );
+    QVector3D mP3 = QVector3D(   1.5f, 0.f,  2.5f  );
 };
 
 #endif // VISUALOBJECT_H

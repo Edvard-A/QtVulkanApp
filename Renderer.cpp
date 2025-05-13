@@ -10,6 +10,7 @@
 #include "stb_image.h"
 #include "ObjMesh.h"
 #include "player.h"
+#include "beziercurve.h"
 
 /*** Renderer class ***/
 Renderer::Renderer(QVulkanWindow *w, bool msaa)
@@ -331,7 +332,8 @@ void Renderer::startNextFrame()
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
-    mObjects.at(6)->chase(mObjects.at(5), 0.01f, QVector3D(1, 1, -5));
+    //mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(1, 1, -16));
+    mObjects.at(6)->gooner();
     //mObjects.at(6)->moveEnemy();
     mCamera.update();               //input can have moved the camera
 
