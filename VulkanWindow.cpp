@@ -249,11 +249,11 @@ void VulkanWindow::movePlayer()
         if(mInput.W)
             dynamic_cast<Renderer*>(mRenderer)->mObjects.at(5)->move(0.f, 0.f, -mPlayerSpeed);
         if(mInput.S)
-            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(5)->move(0.f, 0.f, mPlayerSpeed);
+            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(5)->move(0.f, 0.f,  mPlayerSpeed);
         if(mInput.A)
             dynamic_cast<Renderer*>(mRenderer)->mObjects.at(5)->move(-mPlayerSpeed, 0.f, 0.f);
         if(mInput.D)
-            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(5)->move(mPlayerSpeed, 0.f, 0.f);
+            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(5)->move( mPlayerSpeed, 0.f, 0.f);
     }
 
 }
