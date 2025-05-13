@@ -53,6 +53,8 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(7)->move(-3.f, 0.f, 0.f);
     mObjects.at(8)->scale(2);
     mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
+    qDebug() << "Enemy radius is: " << mObjects.at(6)->getRadius();
+    qDebug() << "Player radius is: " << mObjects.at(5)->getRadius();
     // **************************************
     // Objects in optional map
     // **************************************
@@ -322,7 +324,7 @@ void Renderer::startNextFrame()
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
-    mObjects.at(5)->isColliding(mObjects.at(6));
+    mObjects.at(6)->chase(mObjects.at(5), 0.01f, QVector3D(1, 1, -5));
     //mObjects.at(6)->moveEnemy();
     mCamera.update();               //input can have moved the camera
 

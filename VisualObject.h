@@ -18,6 +18,8 @@ public:
     void moveEnemy();
 
     bool isColliding(VisualObject* otherObject);
+    void chase(VisualObject* otherObject, float speed, QVector3D anchor);
+
 
 	//Setters and Getters
     inline std::vector<Vertex> getVertices() { return mVertices; }
@@ -38,6 +40,7 @@ public:
 
     QVector3D getPosition();
     void setPosition(float x, float y, float z);
+    void vecSetPosition(QVector3D newPosition);
 
 protected:
     std::vector<Vertex> mVertices;
