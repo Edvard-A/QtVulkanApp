@@ -300,7 +300,9 @@ void Renderer::initResources()
     // Create the texture sampler
     createTextureSampler();
 
-    mTextureHandle = createTexture((assetPath + "Hund.bmp")); //Heightmap.jpg HundA.bmp
+    mTextureHandle[0] = createTexture((assetPath + "Hund.bmp")); //Heightmap.jpg HundA.bmp
+    mTextureHandle[1] = createTexture((assetPath + "orange.jpg"));
+    mTextureHandle[2] = createTexture((assetPath + "Mark.jpg"));
     //mTextureHandle = createTexture((assetPath + "green-grass-texture.jpg").c_str());
 
     // getVulkanHWInfo(); // if you want to get info about the Vulkan hardware
@@ -352,7 +354,8 @@ void Renderer::startNextFrame()
         setModelMatrix((*it)->getMatrix()); //mvp);
         
         // Bind the texture descriptor set
-		setTexture(mTextureHandle, commandBuffer);
+        int texType = (*it)->getTextureType();
+        setTexture(mTextureHandle[texType], commandBuffer);
         
         mDeviceFunctions->vkCmdBindVertexBuffers(commandBuffer, 0, 1, &(*it)->getVBuffer(), &vbOffset);
 		//Check if we have an index buffer - if so, use Indexed draw
@@ -835,7 +838,7 @@ void Renderer::releaseResources()
     }
 
     // Destroy textures
-    destroyTexture(mTextureHandle);
+    destroyTexture(mTextureHandle[0]);
 
 	if (mTextureSampler) {
 		mDeviceFunctions->vkDestroySampler(dev, mTextureSampler, nullptr);

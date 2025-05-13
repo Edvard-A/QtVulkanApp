@@ -20,7 +20,6 @@ public:
     bool isColliding(VisualObject* otherObject);
     void chase(VisualObject* otherObject, float speed, QVector3D anchor);
 
-
 	//Setters and Getters
     inline std::vector<Vertex> getVertices() { return mVertices; }
     inline VkBuffer& getVBuffer() { return mVertexBuffer.mBuffer; }
@@ -37,6 +36,8 @@ public:
     inline QMatrix4x4 getMatrix() const {return mMatrix;}
 	inline std::vector<Vertex> getVertices() const { return mVertices; }
 	inline std::vector<uint32_t> getIndices() const { return mIndices; }
+    inline int getTextureType() { return textureType; }
+    inline void setTextureType(int tex) { textureType = tex; }
 
     QVector3D getPosition();
     void setPosition(float x, float y, float z);
@@ -54,7 +55,18 @@ protected:
 
     int drawType{ 0 }; // 0 = fill, 1 = line
 
+
+    int textureType{0};
+    enum textureType
+    {
+        dog = 0,
+        orange = 1,
+        mark = 2
+    };
+
     bool isEndReached = false;
+
+    float radius;
 };
 
 #endif // VISUALOBJECT_H
