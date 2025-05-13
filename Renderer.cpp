@@ -58,6 +58,8 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(4)->setTextureType(1);
     mObjects.at(7)->setTextureType(3);
     mObjects.at(8)->setTextureType(2);
+
+    mObjects.at(5)->move(8, 0, 0);
     //mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
     // **************************************
     // Objects in optional map
@@ -332,8 +334,8 @@ void Renderer::startNextFrame()
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
-    //mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(1, 1, -16));
-    mObjects.at(6)->gooner();
+    mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
+    //mObjects.at(6)->gooner();
     //mObjects.at(6)->moveEnemy();
     mCamera.update();               //input can have moved the camera
 

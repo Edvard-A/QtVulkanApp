@@ -53,6 +53,7 @@ void VisualObject::vecSetPosition(QVector3D newPosition)
     mMatrix(2, 3) = newPosition.z(); // Position in the z-axis
 }
 
+// UNUSED
 void VisualObject::moveEnemy()
 {
 
@@ -112,7 +113,7 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
     else
     {
         //if(this->getPosition() != anchor) //<- Might be better to use this
-        if(sqrt((this->getPosition().x() - anchor.x()) * (this->getPosition().x() - anchor.x())) > 0.1f &&
+        if( sqrt((this->getPosition().x() - anchor.x()) * (this->getPosition().x() - anchor.x())) > 0.1f &&
             sqrt((this->getPosition().z() - anchor.z()) * (this->getPosition().z() - anchor.z())) > 0.1f)
         {
             //qDebug("Enemy is moving!");
@@ -127,26 +128,50 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
                 this->move(0, 0, -speed);
         }
         else
+        {
             bIsChasing = false;
+            //mT = 0;
+            //setXZPosition(-2.5, 2.0);
             qDebug("enemy is not moving!");
-
+        }
     }
     if(!bIsChasing)
     {
-        if(this->getPosition().x() < 5.f && this->getPosition().z() < (-5) && !isEndReached) // x < end.x() && z < end.z()
-        {
-            qDebug("this function was called!");
-            mMatrix.translate(5.f / 100, 0.f, 11.f / 100); // translate(end.x() / speed?, 0, end.z() / speed?)
-        } else{
-            isEndReached = true;
+        //qDebug() << "mT is: " << mT;
+        //qDebug() << "is going forward?: " << mbIsForward;
+        if (mbIsForward)
+            mT += bezierSpeed;
+        else
+            mT -= bezierSpeed;
+
+        if (mT >= 1.0f){
+            mT = 1.0f;
+            mbIsForward = false;
         }
 
-        if(this->getPosition().x() > 0 && this->getPosition().z() > -16 && isEndReached)
+        else if (mT <= 0.0f)
         {
-            mMatrix.translate(-5.f / 100, 0.f, -11.f / 100);
-        } else{
-            isEndReached = false;
+            mT = 0.0f;
+            mbIsForward = true;
         }
+
+        QVector3D pos = calclulateDeCastiljau(mP0, mP1, mP2, mP3, mT);
+        qDebug() << "position is: " << pos;
+        setXZPosition(pos.x(), pos.z());
+        //if(this->getPosition().x() < 5.f && this->getPosition().z() < (-5) && !isEndReached) // x < end.x() && z < end.z()
+        //{
+        //    qDebug("this function was called!");
+        //    mMatrix.translate(5.f / 100, 0.f, 11.f / 100); // translate(end.x() / speed?, 0, end.z() / speed?)
+        //} else{
+        //    isEndReached = true;
+        //}
+
+        //if(this->getPosition().x() > 0 && this->getPosition().z() > -16 && isEndReached)
+        //{
+        //    mMatrix.translate(-5.f / 100, 0.f, -11.f / 100);
+        //} else{
+        //    isEndReached = false;
+        //}
     }
 }
 
@@ -169,6 +194,7 @@ QVector3D VisualObject::calclulateDeCastiljau(QVector3D p0, QVector3D p1, QVecto
     return R;
 }
 
+// UNUSED
 void VisualObject::gooner() //(QVector3D p0, QVector3D p1, QVector3D p2, QVector3D p3)
 {
 
