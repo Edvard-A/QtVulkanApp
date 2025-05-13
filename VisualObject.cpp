@@ -35,6 +35,7 @@ void VisualObject::setPosition(float x, float y, float z)
     mMatrix(2, 3) = z; // Position in the z-axis
 }
 
+void VisualObject::vecSetPosition(QVector3D newPosition)
 void VisualObject::moveEnemy()
 {
 
