@@ -86,7 +86,7 @@ bool VisualObject::isColliding(VisualObject* otherObject)
 
 void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D anchor)
 {
-    qDebug() << "is enemy chasing?: " << bIsChasing;
+    //qDebug() << "is enemy chasing?: " << bIsChasing;
     if(this->isColliding(otherObject))
     {
         //qDebug() << "Player position is: " << otherObject->getPosition();
@@ -112,6 +112,7 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
     }
     else
     {
+        //qDebug() << returnToThis;
         //if(this->getPosition() != anchor) //<- Might be better to use this
         if( sqrt((this->getPosition().x() - returnToThis.x()) * (this->getPosition().x() - returnToThis.x())) > 0.002f &&
             sqrt((this->getPosition().z() - returnToThis.z()) * (this->getPosition().z() - returnToThis.z())) > 0.002f)
@@ -123,19 +124,30 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
             if(this->getPosition().x() < returnToThis.x())
             {
                 this->move(speed, 0, 0);
-            if(this->getPosition().x() > anchor.x())
-                this->move(-speed, 0, 0);
-            if(this->getPosition().z() < anchor.z())
+                qDebug("moving in positive X direction");
+            }
+            if(this->getPosition().x() > returnToThis.x())
+            {
+                this->move(speed * (-1), 0, 0);
+                qDebug("moving in negative X direction");
+            }
+            if(this->getPosition().z() < returnToThis.z())
+            {
                 this->move(0, 0, speed);
-            if(this->getPosition().z() > anchor.z())
-                this->move(0, 0, -speed);
+                qDebug("moving in positive Z direction");
+            }
+            if(this->getPosition().z() > returnToThis.z())
+            {
+                this->move(0, 0, speed * (-1));
+                qDebug("moving in negative Z direction");
+            }
         }
         else
         {
             bIsChasing = false;
             //mT = 0;
             //setXZPosition(-2.5, 2.0);
-            qDebug("enemy is not moving!");
+            //qDebug("enemy is not moving!");
         }
     }
     if(!bIsChasing)
@@ -159,7 +171,7 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
         }
 
         QVector3D pos = calclulateDeCastiljau(mP0, mP1, mP2, mP3, mT);
-        qDebug() << "position is: " << pos;
+        //qDebug() << "position is: " << pos;
         setXZPosition(pos.x(), pos.z());
         returnToThis.setX(pos.x());
         returnToThis.setZ(pos.z());
