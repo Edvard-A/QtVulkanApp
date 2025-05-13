@@ -102,7 +102,7 @@ private:
 
     //Texture variables
     VkSurfaceFormatKHR mSurfaceFormat{};
-    TextureHandle mTextureHandle;
+    TextureHandle mTextureHandle; // can make into an array to hold multiple texture assets
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags requiredProperties);
 
