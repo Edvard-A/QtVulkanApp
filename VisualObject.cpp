@@ -15,6 +15,11 @@ void VisualObject::scale(float s)
     mMatrix.scale(s);
 }
 
+void VisualObject::scaleUneven(float x, float y, float z)
+{
+    mMatrix.scale(x, y, z);
+}
+
 void VisualObject::rotate(float t, float x, float y, float z)
 {
     mMatrix.rotate(t, x, y, z);

@@ -51,10 +51,10 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
     mObjects.at(6)->move(0.f, 0.f, -5.f);
     mObjects.at(7)->move(-3.f, 0.f, 0.f);
-    mObjects.at(8)->scale(2);
-    mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
-    qDebug() << "Enemy radius is: " << mObjects.at(6)->getRadius();
-    qDebug() << "Player radius is: " << mObjects.at(5)->getRadius();
+    mObjects.at(8)->move(-3.f, 0.5f, 0.f);
+    mObjects.at(8)->scale(3.f);
+    mObjects.at(7)->scaleUneven(1.f, 2.f, 1.f);
+    //mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
     // **************************************
     // Objects in optional map
     // **************************************
