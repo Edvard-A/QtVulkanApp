@@ -54,6 +54,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(8)->move(-3.f, 0.5f, 0.f);
     mObjects.at(8)->scale(3.f);
     mObjects.at(7)->scaleUneven(1.f, 2.f, 1.f);
+    mObjects.at(4)->setTextureType(1);
     //mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
     // **************************************
     // Objects in optional map
