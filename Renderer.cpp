@@ -83,6 +83,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
 
 	//Inital position of the camera
     mCamera.setPosition(QVector3D(-0.5, -15, -32));
+    mCamera.pitch(25);
 
     //Need access to our VulkanWindow so making a convenience pointer
     mVulkanWindow = dynamic_cast<VulkanWindow*>(w);
