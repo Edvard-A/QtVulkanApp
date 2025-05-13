@@ -86,6 +86,8 @@ protected:
     QVector3D mP1 = QVector3D(   1.f,  0.f, -0.5f  );
     QVector3D mP2 = QVector3D(  -1.5f, 0.f,  1.f   );
     QVector3D mP3 = QVector3D(   1.5f, 0.f,  2.5f  );
+
+    QVector3D returnToThis = QVector3D(0, 0, 0);
 };
 
 #endif // VISUALOBJECT_H
