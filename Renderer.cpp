@@ -10,7 +10,6 @@
 #include "stb_image.h"
 #include "ObjMesh.h"
 #include "player.h"
-#include "beziercurve.h"
 
 /*** Renderer class ***/
 Renderer::Renderer(QVulkanWindow *w, bool msaa)
@@ -28,38 +27,53 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
         }
     }
 
-    mObjects.push_back(new Triangle());
-    mObjects.push_back((new TriangleSurface()));
-    mObjects.push_back((new WorldAxis()));
-	mObjects.push_back(new HeightMap());
-    mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));
-    mObjects.push_back(new Player());
-    mObjects.push_back(new Enemy());
-    mObjects.push_back(new ObjMesh(assetPath + "cylinder.obj"));
-    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
     // Dag 030225
-    mObjects.at(0)->setName("tri");
+
+
+    // Tri and Quad
+    mObjects.push_back(new Triangle());                           // init
+    mObjects.push_back((new TriangleSurface()));
+    mObjects.at(0)->setName("tri");                               // name
     mObjects.at(1)->setName("quad");
+    mObjects.at(0)->move(1111, 0, 0);                             // move
+    mObjects.at(1)->move(1111, 0, 0);
+
+    // Axis
+    mObjects.push_back((new WorldAxis()));
     mObjects.at(2)->setName("axis");
-	mObjects.at(3)->setName("terrain");
-    mObjects.at(4)->setName("suzanne");
-    mObjects.at(5)->setName("player");
+
+    // Height map / Terrain
+    mObjects.push_back(new HeightMap());
+    mObjects.at(3)->setName("terrain");
+    static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");    
+
+    // Suzanne
+    mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));   // init
+    mObjects.at(4)->setName("suzanne");                           // name
+    mObjects.at(4)->move(1, 2, 0);                                // move
+    mObjects.at(4)->setTextureType(1);                            // texture
+
+    // Player
+    mObjects.push_back(new Player());                             // init
+    mObjects.at(5)->setName("player");                            // name
+    mObjects.at(5)->move(8, 0, 0);                                // move
+
+    // Enemy
+    mObjects.push_back(new Enemy());
     mObjects.at(6)->setName("enemy");
-    mObjects.at(7)->setName("cylinder");
+
+    // tree
+    mObjects.push_back(new ObjMesh(assetPath + "cylinder.obj"));  // init
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+    mObjects.at(7)->setName("cylinder");                          // names
     mObjects.at(8)->setName("sphere");
-
-
-    static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
-    mObjects.at(6)->move(0.f, 0.f, -16.f);
-    mObjects.at(7)->move(-3.f, 1.f, 0.f);
+    mObjects.at(7)->move(-3.f, 1.f, 0.f);                         // move
     mObjects.at(8)->move(-3.f, 2.f, 0.f);
-    mObjects.at(8)->scale(5.f);
+    mObjects.at(8)->scale(5.f);                                   // scale
     mObjects.at(7)->scaleUneven(1.f, 2.f, 1.f);
-    mObjects.at(4)->setTextureType(1);
-    mObjects.at(7)->setTextureType(3);
+    mObjects.at(7)->setTextureType(3);                            // texture
     mObjects.at(8)->setTextureType(2);
 
-    mObjects.at(5)->move(8, 0, 0);
     //mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
     // **************************************
     // Objects in optional map
