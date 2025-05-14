@@ -358,6 +358,7 @@ void Renderer::initSwapChainResources()
 void Renderer::startNextFrame()
 {
 
+    qDebug() << "Player position: " << mObjects.at(5)->getPosition();
 
     /// HANDLING PLAYER HEIGHT ADJUSTMENT
 
@@ -369,8 +370,10 @@ void Renderer::startNextFrame()
             if(heightMapObj)
             {
                 //qDebug() << "map width: " << heightMapObj->getWidth();
+
                 float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices());
                 float deltaY = newY - mObjects.at(5)->getPosition().y();
+                qDebug() << "new Y is: " << newY;
                 mObjects.at(5)->move(0.f, deltaY, 0.f);
             }
         }

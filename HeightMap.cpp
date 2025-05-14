@@ -159,7 +159,7 @@ float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> 
     //qDebug() << "Grid X: " << gridX;
     //qDebug() << "Grid Z: " << gridZ;
     //qDebug() << "Width: " << mWidth;
-    qDebug() << "top left index: " << topLeftIndex;
+    //qDebug() << "top left index: " << topLeftIndex;
 
     if(xCoord + zCoord <= 1.f)
     {
