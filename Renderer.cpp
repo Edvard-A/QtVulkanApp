@@ -402,12 +402,12 @@ void Renderer::startNextFrame()
             if(heightMapObj)
             {
                 // Player barycentric coordinates
-                float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices());
+                float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(5));
                 float deltaY = newY - mObjects.at(5)->getPosition().y();
                 mObjects.at(5)->move(0.f, deltaY, 0.f);
 
                 // Enemy barycentric coordinates
-                float enemyNewY = heightMapObj->getHeightOnMap(enemyPosXZ.x(), enemyPosXZ.z(), mObjects.at(3)->getVertices());
+                float enemyNewY = heightMapObj->getHeightOnMap(enemyPosXZ.x(), enemyPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(6));
                 float enemyDeltaY = enemyNewY - mObjects.at(6)->getPosition().y();
                 mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
             }
