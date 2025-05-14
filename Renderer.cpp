@@ -47,17 +47,17 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(3)->setName("terrain");
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
 
-    for(auto obj : mObjects){
-        if(mObjects.at(3))
-        {
-            HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
-            if(heightMapObj)
-            {
-                qDebug() << "object number: " << obj;
-                qDebug() << "map width: " << heightMapObj->getWidth();
-            }
-        }
-    }
+    //for(auto obj : mObjects){
+    //    if(obj->getName() == "terrain")
+    //    {
+    //        HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
+    //        if(heightMapObj)
+    //        {
+    //            qDebug() << "object number: " << obj;
+    //            qDebug() << "map width: " << heightMapObj->getWidth();
+    //        }
+    //    }
+    //}
 
     // Suzanne
     mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));   // init
@@ -363,14 +363,18 @@ void Renderer::startNextFrame()
 
     QVector3D posXZ = QVector3D(mObjects.at(5)->getPosition().x(), 0.f, mObjects.at(5)->getPosition().z()); // getting the XZ coordinates of the player
     for(auto obj : mObjects){
-        HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
-        if(heightMapObj)
+        if(obj->getName() == "terrain")
         {
-            //qDebug() << "map width: " << heightMapObj->getWidth();
-            //float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices());
-            //float deltaY = newY - mObjects.at(5)->getPosition().y();
-            //mObjects.at(5)->move(0.f, deltaY, 0.f);
+            HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
+            if(heightMapObj)
+            {
+                //qDebug() << "map width: " << heightMapObj->getWidth();
+                float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices());
+                float deltaY = newY - mObjects.at(5)->getPosition().y();
+                mObjects.at(5)->move(0.f, deltaY, 0.f);
+            }
         }
+
     }
 
     ///

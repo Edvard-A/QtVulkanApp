@@ -134,7 +134,7 @@ float HeightMap::calculateBarycentric(QVector2D P, QVector3D A, QVector3D B, QVe
     return u * a.y() + v * b.y() + w * c.y();
 }
 
-float HeightMap::getHeightOnMap(float worldX, float worldZ, int width, std::vector<Vertex> mapVertices)
+float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> mapVertices)
 {
     //qDebug() << "Width: " << mWidth;
     float horizontalSpacing{0.2f};
@@ -151,14 +151,14 @@ float HeightMap::getHeightOnMap(float worldX, float worldZ, int width, std::vect
 
     QVector3D a, b, c;
 
-    int topLeftIndex = gridX + gridZ * width;
+    int topLeftIndex = gridX + gridZ * mWidth;
 
     //qDebug() << "mVertices size: " << mapVertices.size();
     //qDebug() << "vertex XZ: " << mVertices[gridX].x << ", " << mVertices[gridX].z;
     //qDebug() << "mapVertex: " << mapVertices[topLeftIndex].x;
     //qDebug() << "Grid X: " << gridX;
     //qDebug() << "Grid Z: " << gridZ;
-    //qDebug() << "Width: " << width;
+    //qDebug() << "Width: " << mWidth;
     qDebug() << "top left index: " << topLeftIndex;
 
     if(xCoord + zCoord <= 1.f)
@@ -169,16 +169,16 @@ float HeightMap::getHeightOnMap(float worldX, float worldZ, int width, std::vect
         //qDebug() << "Grid X: " << gridX;
         //qDebug() << "Grid Z: " << gridZ;
         //qDebug() << "vertices: " << mVertices[topLeftIndex].x << mVertices[topLeftIndex].z;
-        //a = QVector3D(mapVertices[topLeftIndex].x, mapVertices[topLeftIndex].y, mapVertices[topLeftIndex].z);
-        //b = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
-        //c = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
+        a = QVector3D(mapVertices[topLeftIndex].x, mapVertices[topLeftIndex].y, mapVertices[topLeftIndex].z);
+        b = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
+        c = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
     }
     else
     {
         // Bottom-Right triangle
-        //a = QVector3D(mapVertices[topLeftIndex + 1 + mWidth].x, mapVertices[topLeftIndex + 1 + mWidth].y, mapVertices[topLeftIndex + 1 + mWidth].z);
-        //b = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
-        //c = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
+        a = QVector3D(mapVertices[topLeftIndex + 1 + mWidth].x, mapVertices[topLeftIndex + 1 + mWidth].y, mapVertices[topLeftIndex + 1 + mWidth].z);
+        b = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
+        c = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
     }
 
     QVector2D p(gridX, gridZ);
