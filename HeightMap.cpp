@@ -12,13 +12,13 @@ void HeightMap::makeTerrain(std::string heightMapImage)
 	stbi_uc* pixelData = stbi_load(heightMapImage.c_str(), &mWidth, &mHeight, &mChannels, STBI_rgb_alpha);
 	if (pixelData == nullptr)
     {
-	    qDebug() << "Failed to load heightmap image!";
+        //qDebug() << "Failed to load heightmap image!";
 	    return;
 	}
 	//Make the terrain from the pixel data
-    qDebug() << "width was changed: " << mWidth;
+    //qDebug() << "width was changed: " << mWidth;
 	makeTerrain(pixelData, mWidth, mHeight);
-    qDebug() << "width was changed: " << mWidth;
+    //qDebug() << "width was changed: " << mWidth;
 	stbi_image_free(pixelData);
 }
 
@@ -50,15 +50,15 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
     unsigned short width = widthIn;       //Width == x-axis
     unsigned short depth = heightIn;      //Depth == z-axis
 
-    qDebug() << "width was changed: " << widthIn;
+    //qDebug() << "width was changed: " << widthIn;
 
     //Temp variables for creating the mesh
     //Adding offset so the middle of the terrain will be in World origo
-    //float vertexXStart{ 0.f - width * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f - width * horisontalSpacing / 2};
-    //float vertexZStart{ 0.f + depth * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f + depth * horisontalSpacing / 2};
+    float vertexXStart{ 0.f - width * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f - width * horisontalSpacing / 2};
+    float vertexZStart{ 0.f + depth * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f + depth * horisontalSpacing / 2};
 
-    float vertexXStart{ 0.f };
-    float vertexZStart{ 0.f };
+    //saafloat vertexXStart{ 0.f };
+    //saafloat vertexZStart{ 0.f };
 
     //Loop to make the mesh from the values read from the heightmap (textureData)
 	//Double for-loop to make the depth and the width of the terrain in one go
@@ -78,7 +78,7 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
         }
     }
 
-    qDebug() << "width was changed: " << width;
+    //qDebug() << "width was changed: " << width;
     // The mesh(grid) is drawn in quads with diagonals from lower left to upper right
     //          _ _
     //         |/|/|
@@ -100,14 +100,14 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
         }
     }
 
-    qDebug() << "width was changed: " << width;
+    //qDebug() << "width was changed: " << width;
 
 	//Calculating the normals for the mesh
     //Function not made yet:
     //calculateHeighMapNormals();
 }
 
-float HeightMap::calculateBarycentric(QVector2D P, QVector3D A, QVector3D B, QVector3D C)
+float HeightMap::calculateBarycentric(const QVector2D& P, const QVector3D& A, const QVector3D& B, const QVector3D& C)
 {
     // transferring values to 2D vectors
     QVector2D a(A.x(), A.z());
@@ -131,27 +131,66 @@ float HeightMap::calculateBarycentric(QVector2D P, QVector3D A, QVector3D B, QVe
     float w = (d00 * d21 - d01 * d20) / denom;
     float u = 1 - v - w; // u + v + w = 1
 
-    return u * a.y() + v * b.y() + w * c.y();
+    //qDebug() << "A: " << A.y() << ", B: " << B.y() << ", C: " << C.y();
+    //qDebug() << "uA: " << u * A.y() << ", vB: " << v * B.y() << ", wC: " << w * C.y();
+    //qDebug() << "result: " << u * A.y() + v * B.y() + w * C.y();
+
+    //qDebug() << "B: " << B.y();
+    //qDebug() << "C: " << C.y();
+    //qDebug() << "u: " << u << ", v: " << v << ", w: " << w;
+    return u * A.y() + v * B.y() + w * C.y();
 }
 
 float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> mapVertices)
 {
     //qDebug() << "Width: " << mWidth;
     float horizontalSpacing{0.2f};
-    int gridX = static_cast<int>(worldX / horizontalSpacing); // EDIT THESE TWO TO GET CORRECT HEIGHTMAP
-    int gridZ = static_cast<int>(-worldZ / horizontalSpacing);
+
+    float offsetX = -mWidth * horizontalSpacing / 2.0f;
+    float offsetZ = +mHeight * horizontalSpacing / 2.0f;
+
+    // Convert world coords to grid coords
+    float localX = worldX - offsetX;
+    float localZ = -(worldZ - offsetZ); // flipped due to terrain growing downward in Z
+
+    int gridX = static_cast<int>(localX / horizontalSpacing);
+    int gridZ = static_cast<int>(localZ / horizontalSpacing);
+
+    if (gridX < 0 || gridZ < 0 || gridX >= mWidth - 1 || gridZ >= mHeight - 1)
+        return 0.0f;
+
+    float xCoord = fmod(localX, horizontalSpacing) / horizontalSpacing;
+    float zCoord = fmod(localZ, horizontalSpacing) / horizontalSpacing;
+
+    //int gridX = static_cast<int>(worldX / horizontalSpacing); // EDIT THESE TWO TO GET CORRECT HEIGHTMAP
+    //int gridZ = static_cast<int>(-worldZ / horizontalSpacing);
 
     //qDebug() << "Grid X: " << gridX;
     //qDebug() << "Grid Z: " << gridZ;
 
     // Make out of bounds checker here
 
-    float xCoord = fmod( worldX, horizontalSpacing) / horizontalSpacing;
-    float zCoord = fmod(-worldZ, horizontalSpacing) / horizontalSpacing;
+    //float xCoord = fmod( worldX, horizontalSpacing) / horizontalSpacing;
+    //float zCoord = fmod(-worldZ, horizontalSpacing) / horizontalSpacing;
 
     QVector3D a, b, c;
 
     int topLeftIndex = gridX + gridZ * mWidth;
+
+    if (xCoord + zCoord <= 1.0f)
+    {
+        // Upper-left triangle
+        a = QVector3D(mVertices[topLeftIndex].x, mVertices[topLeftIndex].y, mVertices[topLeftIndex].z);
+        b = QVector3D(mVertices[topLeftIndex + 1].x, mVertices[topLeftIndex + 1].y, mVertices[topLeftIndex + 1].z);
+        c = QVector3D(mVertices[topLeftIndex + mWidth].x, mVertices[topLeftIndex + mWidth].y, mVertices[topLeftIndex + mWidth].z);
+    }
+    else
+    {
+        // Lower-right triangle
+        a = QVector3D(mVertices[topLeftIndex + 1 + mWidth].x, mVertices[topLeftIndex + 1 + mWidth].y, mVertices[topLeftIndex + 1 + mWidth].z);
+        b = QVector3D(mVertices[topLeftIndex + mWidth].x, mVertices[topLeftIndex + mWidth].y, mVertices[topLeftIndex + mWidth].z);
+        c = QVector3D(mVertices[topLeftIndex + 1].x, mVertices[topLeftIndex + 1].y, mVertices[topLeftIndex + 1].z);
+    }
 
     //qDebug() << "mVertices size: " << mapVertices.size();
     //qDebug() << "vertex XZ: " << mVertices[gridX].x << ", " << mVertices[gridX].z;
@@ -161,27 +200,36 @@ float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> 
     //qDebug() << "Width: " << mWidth;
     //qDebug() << "top left index: " << topLeftIndex;
 
-    if(xCoord + zCoord <= 1.f)
-    {
-        // PROBLEM LIES HERE, VECTORS ARE OUT OF RANGE
-    //    // Top-Left triangle
-        //qDebug() << "top left index: " << topLeftIndex;
-        //qDebug() << "Grid X: " << gridX;
-        //qDebug() << "Grid Z: " << gridZ;
-        //qDebug() << "vertices: " << mVertices[topLeftIndex].x << mVertices[topLeftIndex].z;
-        a = QVector3D(mapVertices[topLeftIndex].x, mapVertices[topLeftIndex].y, mapVertices[topLeftIndex].z);
-        b = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
-        c = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
-    }
-    else
-    {
-        // Bottom-Right triangle
-        a = QVector3D(mapVertices[topLeftIndex + 1 + mWidth].x, mapVertices[topLeftIndex + 1 + mWidth].y, mapVertices[topLeftIndex + 1 + mWidth].z);
-        b = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
-        c = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
-    }
+    //qDebug() << "X coordinate: " << xCoord << ", Z coordinate: " << zCoord;
+    //if(xCoord + zCoord <= 1.f)
+    //{
+    //    // PROBLEM LIES HERE, VECTORS ARE OUT OF RANGE
+    ////    // Top-Left triangle
+    //    //qDebug() << "top left index: " << topLeftIndex;
+    //    //qDebug() << "Grid X: " << gridX;
+    //    //qDebug() << "Grid Z: " << gridZ;
+    //    //qDebug() << "vertices: " << mVertices[topLeftIndex].x << mVertices[topLeftIndex].z;
+    //    a = QVector3D(mapVertices[topLeftIndex].x, mapVertices[topLeftIndex].y, mapVertices[topLeftIndex].z);
+    //    b = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
+    //    c = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
+    //    //qDebug() << "top left a: " << a;
+    //}
+    //else
+    //{
+    //    //qDebug("bottom right triangle used!");
+    //    // Bottom-Right triangle
+    //    a = QVector3D(mapVertices[topLeftIndex + 1 + mWidth].x, mapVertices[topLeftIndex + 1 + mWidth].y, mapVertices[topLeftIndex + 1 + mWidth].z);
+    //    b = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
+    //    c = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
+    //    //qDebug() << "bottom right a: " << a;
+    //}
 
-    QVector2D p(gridX, gridZ);
+    //a = QVector3D(mapVertices[topLeftIndex].x, mapVertices[topLeftIndex].y, mapVertices[topLeftIndex].z);
+    //b = QVector3D(mapVertices[topLeftIndex + 1].x, mapVertices[topLeftIndex + 1].y, mapVertices[topLeftIndex + 1].z);
+    //c = QVector3D(mapVertices[topLeftIndex + mWidth].x, mapVertices[topLeftIndex + mWidth].y, mapVertices[topLeftIndex + mWidth].z);
 
-    return calculateBarycentric(p, a, b, c);
+    //qDebug() << "Grid X: " << gridX;
+    //qDebug() << "Grid Z: " << gridZ;
+
+    return calculateBarycentric(QVector2D(worldX, worldZ), a, b, c);
 }

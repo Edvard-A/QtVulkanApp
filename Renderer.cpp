@@ -46,6 +46,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new HeightMap());
     mObjects.at(3)->setName("terrain");
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
+    mObjects.at(3)->setTextureType(2);
 
     //for(auto obj : mObjects){
     //    if(obj->getName() == "terrain")
@@ -358,7 +359,7 @@ void Renderer::initSwapChainResources()
 void Renderer::startNextFrame()
 {
 
-    qDebug() << "Player position: " << mObjects.at(5)->getPosition();
+    //qDebug() << "Player position: " << mObjects.at(5)->getPosition().y();
 
     /// HANDLING PLAYER HEIGHT ADJUSTMENT
 
@@ -372,8 +373,10 @@ void Renderer::startNextFrame()
                 //qDebug() << "map width: " << heightMapObj->getWidth();
 
                 float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices());
+                //qDebug() << "new Y is: " << newY;
                 float deltaY = newY - mObjects.at(5)->getPosition().y();
-                qDebug() << "new Y is: " << newY;
+
+                //qDebug() << "delta Y is: " << deltaY;
                 mObjects.at(5)->move(0.f, deltaY, 0.f);
             }
         }
