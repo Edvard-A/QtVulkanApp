@@ -96,3 +96,30 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
     //Function not made yet:
     //calculateHeighMapNormals();
 }
+
+float HeightMap::calculateBarycentric(QVector2D P, QVector3D A, QVector3D B, QVector3D C)
+{
+    // transferring values to 2D vectors
+    QVector2D a(A.x(), A.z());
+    QVector2D b(B.x(), B.z());
+    QVector2D c(C.x(), C.z());
+
+    QVector2D v0 = b - a, v1 = c - a, v2 = P - a;
+
+    float d00 = QVector2D::dotProduct(v0, v0);
+    float d01 = QVector2D::dotProduct(v0, v1);
+    float d11 = QVector2D::dotProduct(v1, v1);
+    float d20 = QVector2D::dotProduct(v2, v0);
+    float d21 = QVector2D::dotProduct(v2, v1);
+
+    float denom = d00 * d11 - d01 * d01;
+    if(denom == 0.f)
+        return a.y(); // avoid dividing by 0
+
+    // Barycentric coordinates
+    float v = (d11 * d20 - d01 * d21) / denom;
+    float w = (d00 * d21 - d01 * d20) / denom;
+    float u = 1 - v - w; // u + v + w = 1
+
+    return u * a.y() + v * b.y() + w * c.y();
+}
