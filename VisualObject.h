@@ -45,6 +45,7 @@ public:
 	inline std::vector<uint32_t> getIndices() const { return mIndices; }
     inline int getTextureType() { return textureType; }
     inline void setTextureType(int tex) { textureType = tex; }
+    inline void setDrawType(int dT){ drawType = dT; }
 
     QVector3D getPosition();
     void setPosition(float x, float y, float z);
