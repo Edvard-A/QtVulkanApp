@@ -922,8 +922,13 @@ void Renderer::releaseResources()
         }
     }
 
+
     // Destroy textures
-    destroyTexture(mTextureHandle[0]);
+    for(int i{0}; i < (sizeof(mTextureHandle) / sizeof(mTextureHandle[0])); i++) // dividing by the size of the first element of the array to get the amount of elements instead of the sum of the bytes
+    {
+        destroyTexture(mTextureHandle[i]);
+    }
+
 
 	if (mTextureSampler) {
 		mDeviceFunctions->vkDestroySampler(dev, mTextureSampler, nullptr);
