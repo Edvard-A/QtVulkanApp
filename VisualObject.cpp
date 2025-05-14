@@ -125,22 +125,22 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
             if(this->getPosition().x() < returnToThis.x())
             {
                 this->move(speed, 0, 0);
-                qDebug("moving in positive X direction");
+                //qDebug("moving in positive X direction");
             }
             if(this->getPosition().x() > returnToThis.x())
             {
                 this->move(speed * (-1), 0, 0);
-                qDebug("moving in negative X direction");
+                //qDebug("moving in negative X direction");
             }
             if(this->getPosition().z() < returnToThis.z())
             {
                 this->move(0, 0, speed);
-                qDebug("moving in positive Z direction");
+                //qDebug("moving in positive Z direction");
             }
             if(this->getPosition().z() > returnToThis.z())
             {
                 this->move(0, 0, speed * (-1));
-                qDebug("moving in negative Z direction");
+                //qDebug("moving in negative Z direction");
             }
         }
         else
