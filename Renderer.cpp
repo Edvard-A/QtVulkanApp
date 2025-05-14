@@ -380,31 +380,29 @@ void Renderer::initSwapChainResources()
 
 void Renderer::startNextFrame()
 {
-
-    //qDebug() << "Player position: " << mObjects.at(5)->getPosition().y();
-
-    /// HANDLING PLAYER HEIGHT ADJUSTMENT
+    /// HANDLING PLAYER AND ENEMY HEIGHT ADJUSTMENT
 
     QVector3D posXZ = QVector3D(mObjects.at(5)->getPosition().x(), 0.f, mObjects.at(5)->getPosition().z()); // getting the XZ coordinates of the player
+    QVector3D enemyPosXZ = QVector3D(mObjects.at(6)->getPosition().x(), 0.f, mObjects.at(6)->getPosition().z()); // getting the XZ coordinates of the enemy
+
     for(auto obj : mObjects){
         if(obj->getName() == "terrain")
         {
             HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
             if(heightMapObj)
             {
-                //qDebug() << "map width: " << heightMapObj->getWidth();
-
+                // Player barycentric coordinates
                 float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices());
-                //qDebug() << "new Y is: " << newY;
                 float deltaY = newY - mObjects.at(5)->getPosition().y();
-
-                //qDebug() << "delta Y is: " << deltaY;
                 mObjects.at(5)->move(0.f, deltaY, 0.f);
+
+                // Enemy barycentric coordinates
+                float enemyNewY = heightMapObj->getHeightOnMap(enemyPosXZ.x(), enemyPosXZ.z(), mObjects.at(3)->getVertices());
+                float enemyDeltaY = enemyNewY - mObjects.at(6)->getPosition().y();
+                mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
             }
         }
-
     }
-
     ///
 
 
