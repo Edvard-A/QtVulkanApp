@@ -141,7 +141,7 @@ float HeightMap::calculateBarycentric(const QVector2D& P, const QVector3D& A, co
     return u * A.y() + v * B.y() + w * C.y();
 }
 
-float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> mapVertices)
+float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj)
 {
     //qDebug() << "Width: " << mWidth;
     float horizontalSpacing{0.2f};
@@ -156,8 +156,22 @@ float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> 
     int gridX = static_cast<int>(localX / horizontalSpacing);
     int gridZ = static_cast<int>(localZ / horizontalSpacing);
 
+    /// Unused code to keep the player in bounds
+    //if(gridX < 0 || gridX >= mWidth - 1)
+    //{
+    //    obj->setX(gridX);
+    //    return 0;
+    //}
+    //if(gridZ < 0 || gridZ >= mHeight - 1)
+    //{
+    //    obj->setZ(gridZ);
+    //    return 0;
+    //}
     if (gridX < 0 || gridZ < 0 || gridX >= mWidth - 1 || gridZ >= mHeight - 1)
+    {
+        obj->setXZPosition(0.f, 0.f);
         return 0.0f;
+    }
 
     float xCoord = fmod(localX, horizontalSpacing) / horizontalSpacing;
     float zCoord = fmod(localZ, horizontalSpacing) / horizontalSpacing;
