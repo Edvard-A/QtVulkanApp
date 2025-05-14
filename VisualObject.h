@@ -50,6 +50,8 @@ public:
     QVector3D getPosition();
     void setPosition(float x, float y, float z);
     void setXZPosition(float x, float z);
+    void setX(float x);
+    void setZ(float z);
     void vecSetPosition(QVector3D newPosition);
 
 protected:

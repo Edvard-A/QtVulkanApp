@@ -46,6 +46,16 @@ void VisualObject::setXZPosition(float x, float z)
     mMatrix(2, 3) = z; // Position in the z-axis
 }
 
+void VisualObject::setX(float x)
+{
+    mMatrix(0, 3) = x;
+}
+
+void VisualObject::setZ(float z)
+{
+    mMatrix(2, 3) = z;
+}
+
 void VisualObject::vecSetPosition(QVector3D newPosition)
 {
     mMatrix(0, 3) = newPosition.x(); // Position in the x-axis
@@ -147,6 +157,8 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
         else
         {
             bIsChasing = false;
+            this->setDrawType(0);
+            //this->setTextureType(0);
             //mT = 0;
             //setXZPosition(-2.5, 2.0);
             //qDebug("enemy is not moving!");
