@@ -50,8 +50,11 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
 
     //Temp variables for creating the mesh
     //Adding offset so the middle of the terrain will be in World origo
-    float vertexXStart{ 0.f - width * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f - width * horisontalSpacing / 2};
-    float vertexZStart{ 0.f + depth * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f + depth * horisontalSpacing / 2};
+    //float vertexXStart{ 0.f - width * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f - width * horisontalSpacing / 2};
+    //float vertexZStart{ 0.f + depth * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f + depth * horisontalSpacing / 2};
+
+    float vertexXStart{ 0.f };
+    float vertexZStart{ 0.f };
 
     //Loop to make the mesh from the values read from the heightmap (textureData)
 	//Double for-loop to make the depth and the width of the terrain in one go
@@ -122,4 +125,44 @@ float HeightMap::calculateBarycentric(QVector2D P, QVector3D A, QVector3D B, QVe
     float u = 1 - v - w; // u + v + w = 1
 
     return u * a.y() + v * b.y() + w * c.y();
+}
+
+float HeightMap::getHeightOnMap(float worldX, float worldZ)
+{
+    float horizontalSpacing{0.2f};
+    int gridX = static_cast<int>(worldX / horizontalSpacing); // EDIT THESE TWO TO GET CORRECT HEIGHTMAP
+    int gridZ = static_cast<int>(worldZ / horizontalSpacing);
+
+    // Make out of bounds checker here
+
+    float xCoord = fmod( worldX, horizontalSpacing) / horizontalSpacing;
+    float zCoord = fmod(-worldZ, horizontalSpacing) / horizontalSpacing;
+
+    QVector3D a, b, c;
+
+    int topLeftIndex = gridX + gridZ * mWidth;
+
+    if(xCoord + zCoord <= 1.f)
+    {
+        // PROBLEM LIES HERE, VECTORS ARE OUT OF RANGE
+    //    // Top-Left triangle
+        //qDebug() << "top left index: " << topLeftIndex;
+        //qDebug() << "Grid X: " << gridX;
+        //qDebug() << "Grid Z: " << gridZ;
+        //qDebug() << "vertices: " << mVertices[topLeftIndex].x << mVertices[topLeftIndex].z;
+        a = QVector3D(mVertices[topLeftIndex].x, mVertices[topLeftIndex].y, mVertices[topLeftIndex].z);
+        b = QVector3D(mVertices[topLeftIndex + 1].x, mVertices[topLeftIndex + 1].y, mVertices[topLeftIndex + 1].z);
+        c = QVector3D(mVertices[topLeftIndex + mWidth].x, mVertices[topLeftIndex + mWidth].y, mVertices[topLeftIndex + mWidth].z);
+    }
+    else
+    {
+        // Bottom-Right triangle
+        a = QVector3D(mVertices[topLeftIndex + 1 + mWidth].x, mVertices[topLeftIndex + 1 + mWidth].y, mVertices[topLeftIndex + 1 + mWidth].z);
+        b = QVector3D(mVertices[topLeftIndex + mWidth].x, mVertices[topLeftIndex + mWidth].y, mVertices[topLeftIndex + mWidth].z);
+        c = QVector3D(mVertices[topLeftIndex + 1].x, mVertices[topLeftIndex + 1].y, mVertices[topLeftIndex + 1].z);
+    }
+
+    QVector2D p(gridX, gridZ);
+
+    return calculateBarycentric(p, a, b, c);
 }

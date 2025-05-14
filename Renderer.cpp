@@ -56,7 +56,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     // Player
     mObjects.push_back(new Player());                             // init
     mObjects.at(5)->setName("player");                            // name
-    mObjects.at(5)->move(8, 0, 0);                                // move
+    mObjects.at(5)->move(8, 0, -5);                                // move
 
     // Enemy
     mObjects.push_back(new Enemy());
@@ -345,6 +345,23 @@ void Renderer::initSwapChainResources()
 
 void Renderer::startNextFrame()
 {
+
+    /// HANDLING PLAYER HEIGHT ADJUSTMENT
+
+    QVector3D posXZ = QVector3D(mObjects.at(5)->getPosition().x(), 0.f, mObjects.at(5)->getPosition().z()); // getting the XZ coordinates of the player
+    for(auto obj : mObjects){
+        HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
+        if(heightMapObj)
+        {
+            float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z());
+            float deltaY = newY - mObjects.at(5)->getPosition().y();
+            mObjects.at(5)->move(0.f, deltaY, 0.f);
+        }
+    }
+
+    ///
+
+
     //Handeling input from keyboard and mouse is done in VulkanWindow
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();

@@ -14,6 +14,7 @@ public:
     void makeTerrain(unsigned char* textureData, int width, int height);
 
     float calculateBarycentric(QVector2D P, QVector3D A, QVector3D B, QVector3D C);
+    float getHeightOnMap(float worldX, float worldZ);
 
 private:
 	int mWidth{ 0 };
