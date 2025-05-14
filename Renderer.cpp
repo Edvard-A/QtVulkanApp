@@ -46,7 +46,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new HeightMap());
     mObjects.at(3)->setName("terrain");
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
-    mObjects.at(3)->setTextureType(2);
+    mObjects.at(3)->setTextureType(3);
 
     //for(auto obj : mObjects){
     //    if(obj->getName() == "terrain")
@@ -80,12 +80,32 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
     mObjects.at(7)->setName("cylinder");                          // names
     mObjects.at(8)->setName("sphere");
-    mObjects.at(7)->move(-3.f, 1.f, 0.f);                         // move
-    mObjects.at(8)->move(-3.f, 2.f, 0.f);
+    mObjects.at(7)->move(-3.f, -3.f, 0.f);                         // move
+    mObjects.at(8)->move(-3.f, -2.f, 0.f);
     mObjects.at(8)->scale(5.f);                                   // scale
     mObjects.at(7)->scaleUneven(1.f, 2.f, 1.f);
-    mObjects.at(7)->setTextureType(3);                            // texture
-    mObjects.at(8)->setTextureType(2);
+    mObjects.at(7)->setTextureType(5);                            // texture
+    mObjects.at(8)->setTextureType(6);
+    //QVector3D treeXZ = QVector3D(mObjects.at(7)->getPosition().x(), 0.f, mObjects.at(7)->getPosition().z());
+    //for(auto obj : mObjects){
+    //    if(obj->getName() == "terrain")
+    //    {
+    //        HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
+    //        if(heightMapObj)
+    //        {
+    //            //qDebug() << "map width: " << heightMapObj->getWidth();
+
+    //            float newY = heightMapObj->getHeightOnMap(treeXZ.x(), treeXZ.z(), mObjects.at(3)->getVertices());
+    //            //qDebug() << "new Y is: " << newY;
+    //            float deltaY = newY - mObjects.at(7)->getPosition().y();
+
+    //            //qDebug() << "delta Y is: " << deltaY;
+    //            mObjects.at(7)->move(0.f, deltaY, 0.f);
+    //        }
+    //    }
+
+    //}
+
 
     //mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
     // **************************************
@@ -339,6 +359,8 @@ void Renderer::initResources()
     mTextureHandle[2] = createTexture((assetPath + "Mark.jpg"));
     mTextureHandle[3] = createTexture((assetPath + "pink.jpg"));
     mTextureHandle[4] = createTexture((assetPath + "Heightmap.jpg"));
+    mTextureHandle[5] = createTexture((assetPath + "oakLog.png"));
+    mTextureHandle[6] = createTexture((assetPath + "leaves.jpg"));
     //mTextureHandle = createTexture((assetPath + "green-grass-texture.jpg").c_str());
 
     // getVulkanHWInfo(); // if you want to get info about the Vulkan hardware

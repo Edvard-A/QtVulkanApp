@@ -91,6 +91,7 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
     {
         //qDebug() << "Player position is: " << otherObject->getPosition();
         //qDebug() << "Enemy position is: " << this->getPosition();
+        this->setTextureType(1);
         bIsChasing = true;
         if(this->getPosition().x() < otherObject->getPosition().x())
             this->move(speed, 0, 0);
@@ -145,6 +146,7 @@ void VisualObject::chase(VisualObject* otherObject, float speed, QVector3D ancho
         else
         {
             bIsChasing = false;
+            this->setTextureType(0);
             //mT = 0;
             //setXZPosition(-2.5, 2.0);
             //qDebug("enemy is not moving!");
