@@ -335,6 +335,16 @@ void Renderer::initResources()
     if (result != VK_SUCCESS)
         qFatal("Failed to create graphics pipeline: %d", result);
 
+    mPipeline2 = mPipeline1;                       // reusing most of the settings from the first pipeline
+    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;   // draw lines
+    rasterization.polygonMode = VK_POLYGON_MODE_FILL;           // VK_POLYGON_MODE_LINE will make a wireframe; VK_POLYGON_MODE_FILL
+    rasterization.lineWidth = 5.0f;
+    pipelineInfo.pInputAssemblyState = &inputAssembly;
+    pipelineInfo.pStages = shaderStagesC;
+    result = mDeviceFunctions->vkCreateGraphicsPipelines(logicalDevice, mPipelineCache, 1, &pipelineInfo, nullptr, &mPipeline2);
+    if (result != VK_SUCCESS)
+        qFatal("Failed to create graphics pipeline: %d", result);
+
 
 	// Destroying the shader modules, we won't need them anymore after the pipeline is created
     if (vertShaderModule)
@@ -432,8 +442,10 @@ void Renderer::startNextFrame()
         //Draw type
 		if ((*it)->getDrawType() == 0)
 			mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline1);
-		else
+        else if((*it)->getDrawType() == 1)
 			mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mColorMaterial.pipeline);
+        else
+            mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline2);
 
         QMatrix4x4 mvp = mCamera.projectionMatrix() * mCamera.viewMatrix() * (*it)->getMatrix();
         setModelMatrix((*it)->getMatrix()); //mvp);

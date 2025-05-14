@@ -76,6 +76,9 @@ protected:
     // keep an eye on this one
     VkPipeline mPipeline1{ VK_NULL_HANDLE };
 
+    // Attempt at a second pipeline
+    VkPipeline mPipeline2{ VK_NULL_HANDLE };
+
 
 
     VkQueue mGraphicsQueue{ VK_NULL_HANDLE };
