@@ -95,6 +95,14 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(9)->setTextureType(1);
     mObjects.at(9)->scale(1.5f);
 
+    //for(int i; i < 10000; i++)
+    //{
+    //    if(mObjects.at(3)->getIndices()[i])
+    //        qDebug() << i;
+    //    else
+    //        qDebug() << 0;
+    //}
+
     //QVector3D treeXZ = QVector3D(mObjects.at(7)->getPosition().x(), 0.f, mObjects.at(7)->getPosition().z());
     //for(auto obj : mObjects){
     //    if(obj->getName() == "terrain")
@@ -429,6 +437,13 @@ void Renderer::startNextFrame()
             }
         }
     }
+
+    //for(int i; i < mObjects.at(3)->getIndices().size(); i++)
+    //{
+    //
+    //}
+    //qDebug() << "index amount: " << mObjects.at(3)->getIndices().size();
+
     ///
 
 
