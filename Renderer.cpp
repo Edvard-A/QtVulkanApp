@@ -10,6 +10,7 @@
 #include "stb_image.h"
 #include "ObjMesh.h"
 #include "player.h"
+#include "rollingball.h"
 
 /*** Renderer class ***/
 Renderer::Renderer(QVulkanWindow *w, bool msaa)
@@ -81,12 +82,19 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
     mObjects.at(7)->setName("cylinder");                          // names
     mObjects.at(8)->setName("sphere");
-    mObjects.at(7)->move(-3.f, -3.f, 0.f);                         // move
+    mObjects.at(7)->move(-3.f, -3.f, 0.f);                        // move
     mObjects.at(8)->move(-3.f, -2.f, 0.f);
     mObjects.at(8)->scale(5.f);                                   // scale
     mObjects.at(7)->scaleUneven(1.f, 2.f, 1.f);
     mObjects.at(7)->setTextureType(5);                            // texture
     mObjects.at(8)->setTextureType(6);
+
+    // Rolling ball
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+    mObjects.at(9)->setName("Ball");
+    mObjects.at(9)->setTextureType(1);
+    mObjects.at(9)->scale(1.5f);
+
     //QVector3D treeXZ = QVector3D(mObjects.at(7)->getPosition().x(), 0.f, mObjects.at(7)->getPosition().z());
     //for(auto obj : mObjects){
     //    if(obj->getName() == "terrain")
@@ -396,6 +404,8 @@ void Renderer::startNextFrame()
     QVector3D posXZ = QVector3D(mObjects.at(5)->getPosition().x(), 0.f, mObjects.at(5)->getPosition().z()); // getting the XZ coordinates of the player
     QVector3D enemyPosXZ = QVector3D(mObjects.at(6)->getPosition().x(), 0.f, mObjects.at(6)->getPosition().z()); // getting the XZ coordinates of the enemy
 
+    QVector3D ballPosXZ = QVector3D(mObjects.at(9)->getPosition().x(), 0.0f, mObjects.at(9)->getPosition().z());
+
     for(auto obj : mObjects){
         if(obj->getName() == "terrain")
         {
@@ -411,6 +421,11 @@ void Renderer::startNextFrame()
                 float enemyNewY = heightMapObj->getHeightOnMap(enemyPosXZ.x(), enemyPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(6));
                 float enemyDeltaY = enemyNewY - mObjects.at(6)->getPosition().y();
                 mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
+
+                // Ball barycentric coordinates
+                float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
+                float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
+                mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
             }
         }
     }
@@ -422,6 +437,8 @@ void Renderer::startNextFrame()
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
+    mObjects.at(5)->move(0.01f, 0.f, 0.f);
+    mObjects.at(9)->move(0.02f, 0.0f, 0.01f);
     //mObjects.at(6)->gooner();
     //mObjects.at(6)->moveEnemy();
     mCamera.update();               //input can have moved the camera
