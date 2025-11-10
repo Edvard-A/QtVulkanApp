@@ -47,6 +47,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(3)->setName("terrain");
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
     mObjects.at(3)->setTextureType(3);
+    mObjects.at(3)->setDrawType(1);
 
     //for(auto obj : mObjects){
     //    if(obj->getName() == "terrain")
