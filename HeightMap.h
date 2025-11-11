@@ -18,6 +18,7 @@ public:
     std::vector<QVector3D> getTriangle(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj);
     QVector3D calculateNormal(QVector3D a, QVector3D b, QVector3D c);
     QVector3D calculateUnitNormal(QVector3D a, QVector3D b, QVector3D c);
+    QVector3D calculateAccelerationVec(QVector3D a, QVector3D b, QVector3D c);
 
     int getWidth(){ return mWidth; }
 

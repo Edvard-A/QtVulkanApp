@@ -168,6 +168,15 @@ QVector3D HeightMap::calculateUnitNormal(QVector3D a, QVector3D b, QVector3D c)
     return unitNormal;
 }
 
+QVector3D HeightMap::calculateAccelerationVec(QVector3D a, QVector3D b, QVector3D c)
+{
+    QVector3D unitNormal = calculateUnitNormal(a, b, c);
+    QVector3D accelerationVec = {(unitNormal.x() * unitNormal.z() * 9.81f), (unitNormal.y() * unitNormal.z() * 9.81f), ((unitNormal.z() * unitNormal.z() * 9.81f) - 9.81f)}; // from lecture notes eq. 9.14)
+
+    qDebug() << "Acceleration Vector: " << accelerationVec;
+    return accelerationVec;
+}
+
 std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj)
 {
     std::vector<QVector3D> tempVertices;
@@ -239,7 +248,8 @@ std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::v
     tempVertices.push_back(c);
 
     qDebug() << "Vertices: " << tempVertices;
-    calculateUnitNormal(a,b,c);
+    //calculateUnitNormal(a,b,c);
+    calculateAccelerationVec(a,b,c);
     return tempVertices;
 
 }
