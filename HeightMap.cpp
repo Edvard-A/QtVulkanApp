@@ -141,6 +141,22 @@ float HeightMap::calculateBarycentric(const QVector2D& P, const QVector3D& A, co
     return u * A.y() + v * B.y() + w * C.y();
 }
 
+QVector3D HeightMap::calculateNormal(QVector3D a, QVector3D b, QVector3D c)
+{
+    QVector3D vecBC = {b.x() - c.x(), b.y() - c.y(), b.z() - c.z()}; // u
+    QVector3D vecBA = {b.x() - a.x(), b.y() - a.y(), b.z() - a.z()}; // v
+
+    // u x v = [(u2v3 - u3v2), (u3v2 - u1v3), (u1v2 - u2v1)]
+    float i = (vecBC.y()*vecBA.z()) - (vecBC.z() * vecBA.y());
+    float j = (vecBC.z()*vecBA.x()) - (vecBC.x() * vecBA.z());
+    float k = (vecBC.x()*vecBA.y()) - (vecBC.y() * vecBA.x());
+
+    QVector3D normalVector = {i, j, k};
+    qDebug() << "Normal Vector: " << normalVector;
+
+    return normalVector;
+}
+
 std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj)
 {
     std::vector<QVector3D> tempVertices;

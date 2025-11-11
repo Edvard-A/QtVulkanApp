@@ -16,6 +16,7 @@ public:
     float calculateBarycentric(const QVector2D& P, const QVector3D& A, const QVector3D& B, const QVector3D& C);
     float getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj);
     std::vector<QVector3D> getTriangle(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj);
+    QVector3D calculateNormal(QVector3D a, QVector3D b, QVector3D c);
 
     int getWidth(){ return mWidth; }
 
