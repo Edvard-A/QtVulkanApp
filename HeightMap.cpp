@@ -157,6 +157,17 @@ QVector3D HeightMap::calculateNormal(QVector3D a, QVector3D b, QVector3D c)
     return normalVector;
 }
 
+QVector3D HeightMap::calculateUnitNormal(QVector3D a, QVector3D b, QVector3D c)
+{
+    QVector3D normal = calculateNormal(a,b,c);
+
+    float normalLength = sqrt((normal.x() * normal.x()) + (normal.y() * normal.y()) + (normal.z() * normal.z()));
+    QVector3D unitNormal = {normal.x() / normalLength, normal.y() / normalLength, normal.z() / normalLength};
+
+    qDebug() << "Unit Normal Vector: " << unitNormal;
+    return unitNormal;
+}
+
 std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj)
 {
     std::vector<QVector3D> tempVertices;
@@ -228,7 +239,7 @@ std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::v
     tempVertices.push_back(c);
 
     qDebug() << "Vertices: " << tempVertices;
-    calculateNormal(a,b,c);
+    calculateUnitNormal(a,b,c);
     return tempVertices;
 
 }
