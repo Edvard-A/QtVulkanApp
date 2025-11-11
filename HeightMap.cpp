@@ -141,6 +141,82 @@ float HeightMap::calculateBarycentric(const QVector2D& P, const QVector3D& A, co
     return u * A.y() + v * B.y() + w * C.y();
 }
 
+std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj)
+{
+    std::vector<QVector3D> tempVertices;
+    //qDebug() << "Width: " << mWidth;
+    float horizontalSpacing{0.2f};
+
+    float offsetX = -mWidth * horizontalSpacing / 2.0f;
+    float offsetZ = +mHeight * horizontalSpacing / 2.0f;
+
+    // Convert world coords to grid coords
+    float localX = worldX - offsetX;
+    float localZ = -(worldZ - offsetZ); // flipped due to terrain growing downward in Z
+
+    int gridX = static_cast<int>(localX / horizontalSpacing);
+    int gridZ = static_cast<int>(localZ / horizontalSpacing);
+
+    /// Unused code to keep the player in bounds
+    //if(gridX < 0 || gridX >= mWidth - 1)
+    //{
+    //    obj->setX(gridX);
+    //    return 0;
+    //}
+    //if(gridZ < 0 || gridZ >= mHeight - 1)
+    //{
+    //    obj->setZ(gridZ);
+    //    return 0;
+    //}
+    if (gridX < 0 || gridZ < 0 || gridX >= mWidth - 1 || gridZ >= mHeight - 1)
+    {
+        obj->setXZPosition(0.f, 0.f);
+        //return 0.0f;
+    }
+
+    float xCoord = fmod(localX, horizontalSpacing) / horizontalSpacing;
+    float zCoord = fmod(localZ, horizontalSpacing) / horizontalSpacing;
+
+    //int gridX = static_cast<int>(worldX / horizontalSpacing); // EDIT THESE TWO TO GET CORRECT HEIGHTMAP
+    //int gridZ = static_cast<int>(-worldZ / horizontalSpacing);
+
+    //qDebug() << "Grid X: " << gridX;
+    //qDebug() << "Grid Z: " << gridZ;
+
+    // Make out of bounds checker here
+
+    //float xCoord = fmod( worldX, horizontalSpacing) / horizontalSpacing;
+    //float zCoord = fmod(-worldZ, horizontalSpacing) / horizontalSpacing;
+
+    QVector3D a, b, c;
+
+    int topLeftIndex = gridX + gridZ * mWidth;
+
+    if (xCoord + zCoord <= 1.0f)
+    {
+        // Upper-left triangle
+        a = QVector3D(mVertices[topLeftIndex].x, mVertices[topLeftIndex].y, mVertices[topLeftIndex].z);
+        b = QVector3D(mVertices[topLeftIndex + 1].x, mVertices[topLeftIndex + 1].y, mVertices[topLeftIndex + 1].z);
+        c = QVector3D(mVertices[topLeftIndex + mWidth].x, mVertices[topLeftIndex + mWidth].y, mVertices[topLeftIndex + mWidth].z);
+    }
+    else
+    {
+        // Lower-right triangle
+        a = QVector3D(mVertices[topLeftIndex + 1 + mWidth].x, mVertices[topLeftIndex + 1 + mWidth].y, mVertices[topLeftIndex + 1 + mWidth].z);
+        b = QVector3D(mVertices[topLeftIndex + mWidth].x, mVertices[topLeftIndex + mWidth].y, mVertices[topLeftIndex + mWidth].z);
+        c = QVector3D(mVertices[topLeftIndex + 1].x, mVertices[topLeftIndex + 1].y, mVertices[topLeftIndex + 1].z);
+    }
+
+    tempVertices.push_back(a);
+    tempVertices.push_back(b);
+    tempVertices.push_back(c);
+
+    qDebug() << "Vertices: " << tempVertices;
+    calculateNormal(a,b,c);
+    return tempVertices;
+
+}
+
 float HeightMap::getHeightOnMap(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj)
 {
     //qDebug() << "Width: " << mWidth;

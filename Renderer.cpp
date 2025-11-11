@@ -431,6 +431,7 @@ void Renderer::startNextFrame()
                 mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
 
                 // Ball barycentric coordinates
+                heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
                 float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
                 float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
                 mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
@@ -453,7 +454,7 @@ void Renderer::startNextFrame()
     mVulkanWindow->movePlayer();
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
     mObjects.at(5)->move(0.01f, 0.f, 0.f);
-    mObjects.at(9)->move(0.02f, 0.0f, 0.01f);
+    mObjects.at(9)->move(0.001f, 0.0f, 0.001f);
     //mObjects.at(6)->gooner();
     //mObjects.at(6)->moveEnemy();
     mCamera.update();               //input can have moved the camera
