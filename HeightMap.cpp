@@ -37,7 +37,7 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
 
     //Scaling the height read from the heightmap. 0 -> 255 meters(units) if this is set to 1
     //This should be sent in as a parameter!
-    float heightSpacing{.02f};
+    float heightSpacing{.1f};
 
     //Offset the whole terrain in y (height) axis
     //Moves the terrain mesh up or down
