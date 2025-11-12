@@ -133,8 +133,8 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
         mMap.insert(std::pair<std::string, VisualObject*>{(*it)->getName(),*it});
 
 	//Inital position of the camera
-    mCamera.setPosition(QVector3D(-0.5, -15, -32));
-    mCamera.pitch(25);
+    mCamera.setPosition(QVector3D(-0.5, -35, -32));
+    mCamera.pitch(45);
 
     //Need access to our VulkanWindow so making a convenience pointer
     mVulkanWindow = dynamic_cast<VulkanWindow*>(w);
@@ -449,24 +449,13 @@ void Renderer::startNextFrame()
         }
     }
 
-    //for(int i; i < mObjects.at(3)->getIndices().size(); i++)
-    //{
-    //
-    //}
-    //qDebug() << "index amount: " << mObjects.at(3)->getIndices().size();
-
-    ///
-
-
     //Handeling input from keyboard and mouse is done in VulkanWindow
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
     mObjects.at(5)->move(0.01f, 0.f, 0.f);
-    //mObjects.at(9)->move(0.001f, 0.0f, 0.001f);
-    //mObjects.at(6)->gooner();
-    //mObjects.at(6)->moveEnemy();
+
     mCamera.update();               //input can have moved the camera
 
     VkCommandBuffer commandBuffer = mWindow->currentCommandBuffer();
