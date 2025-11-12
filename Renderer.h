@@ -83,6 +83,8 @@ protected:
 
     VkQueue mGraphicsQueue{ VK_NULL_HANDLE };
 
+    QVector3D ballVelocity = {0.f, 0.f, 0.f};
+
 private:
     friend class VulkanWindow;
 	std::vector<VisualObject*> mObjects;    //All objects in the program  

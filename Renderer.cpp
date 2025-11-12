@@ -430,8 +430,17 @@ void Renderer::startNextFrame()
                 float enemyDeltaY = enemyNewY - mObjects.at(6)->getPosition().y();
                 mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
 
+
+                // Ball rolling
+                std::vector<QVector3D> currentTri = heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
+                //qDebug() << "CURRENT TRIANGLE: " << currentTri;
+
+                QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
+                ballVelocity += {accVec.x()/ 720.f, 0.0f, accVec.z() / 720.f};
+                mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
+                //ballVelocity *= 0.998f; // friction
+
                 // Ball barycentric coordinates
-                heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
                 float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
                 float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
                 mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
@@ -454,7 +463,7 @@ void Renderer::startNextFrame()
     mVulkanWindow->movePlayer();
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
     mObjects.at(5)->move(0.01f, 0.f, 0.f);
-    mObjects.at(9)->move(0.001f, 0.0f, 0.001f);
+    //mObjects.at(9)->move(0.001f, 0.0f, 0.001f);
     //mObjects.at(6)->gooner();
     //mObjects.at(6)->moveEnemy();
     mCamera.update();               //input can have moved the camera
