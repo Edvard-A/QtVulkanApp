@@ -179,8 +179,9 @@ QVector3D HeightMap::calculateAccelerationVec(QVector3D a, QVector3D b, QVector3
 
 std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::vector<Vertex> mapVertices, VisualObject* obj)
 {
+    //std::vector<std::vector<QVector3D>> neighbourInfo; /// unused
     std::vector<QVector3D> tempVertices;
-    //qDebug() << "Width: " << mWidth;
+
     float horizontalSpacing{0.2f};
 
     float offsetX = -mWidth * horizontalSpacing / 2.0f;
@@ -193,36 +194,8 @@ std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::v
     int gridX = static_cast<int>(localX / horizontalSpacing);
     int gridZ = static_cast<int>(localZ / horizontalSpacing);
 
-    /// Unused code to keep the player in bounds
-    //if(gridX < 0 || gridX >= mWidth - 1)
-    //{
-    //    obj->setX(gridX);
-    //    return 0;
-    //}
-    //if(gridZ < 0 || gridZ >= mHeight - 1)
-    //{
-    //    obj->setZ(gridZ);
-    //    return 0;
-    //}
-    if (gridX < 0 || gridZ < 0 || gridX >= mWidth - 1 || gridZ >= mHeight - 1)
-    {
-        obj->setXZPosition(0.f, 0.f);
-        //return 0.0f;
-    }
-
     float xCoord = fmod(localX, horizontalSpacing) / horizontalSpacing;
     float zCoord = fmod(localZ, horizontalSpacing) / horizontalSpacing;
-
-    //int gridX = static_cast<int>(worldX / horizontalSpacing); // EDIT THESE TWO TO GET CORRECT HEIGHTMAP
-    //int gridZ = static_cast<int>(-worldZ / horizontalSpacing);
-
-    //qDebug() << "Grid X: " << gridX;
-    //qDebug() << "Grid Z: " << gridZ;
-
-    // Make out of bounds checker here
-
-    //float xCoord = fmod( worldX, horizontalSpacing) / horizontalSpacing;
-    //float zCoord = fmod(-worldZ, horizontalSpacing) / horizontalSpacing;
 
     QVector3D a, b, c;
 
@@ -247,9 +220,8 @@ std::vector<QVector3D> HeightMap::getTriangle(float worldX, float worldZ, std::v
     tempVertices.push_back(b);
     tempVertices.push_back(c);
 
-    qDebug() << "Vertices: " << tempVertices;
-    //calculateUnitNormal(a,b,c);
-    calculateAccelerationVec(a,b,c);
+    //qDebug() << "NEW TRIANGLE! \n Vertices: " << tempVertices;
+
     return tempVertices;
 
 }
