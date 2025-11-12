@@ -171,7 +171,7 @@ QVector3D HeightMap::calculateUnitNormal(QVector3D a, QVector3D b, QVector3D c)
 QVector3D HeightMap::calculateAccelerationVec(QVector3D a, QVector3D b, QVector3D c)
 {
     QVector3D unitNormal = calculateUnitNormal(a, b, c);
-    QVector3D accelerationVec = {(unitNormal.x() * unitNormal.z() * 9.81f), (unitNormal.y() * unitNormal.z() * 9.81f), ((unitNormal.z() * unitNormal.z() * 9.81f) - 9.81f)}; // from lecture notes eq. 9.14)
+    QVector3D accelerationVec = {(unitNormal.x() * unitNormal.y() * 9.81f), (unitNormal.y() * unitNormal.y() * 9.81f) - 9.81f, ((unitNormal.z() * unitNormal.y() * 9.81f))}; // from lecture notes eq. (9.14)
 
     qDebug() << "Acceleration Vector: " << accelerationVec;
     return accelerationVec;
