@@ -94,6 +94,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(9)->setName("Ball");
     mObjects.at(9)->setTextureType(1);
     mObjects.at(9)->scale(1.5f);
+    mObjects.at(9)->move(4.f, 0.f, 5.f);
 
     //for(int i; i < 10000; i++)
     //{
