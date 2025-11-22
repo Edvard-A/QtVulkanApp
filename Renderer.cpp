@@ -96,6 +96,16 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(9)->scale(1.5f);
     mObjects.at(9)->move(4.f, 0.f, 5.f);
 
+    // friction area
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); //10
+    mObjects.at(10)->move(10.f, 3.5f, 2.f);
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 11
+    mObjects.at(11)->move(15.f, 3.5f, 2.f);
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 12
+    mObjects.at(12)->move(10.f, 3.5f, 7.f);
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 13
+    mObjects.at(13)->move(15.f, 3.5f, 7.f);
+
     //for(int i; i < 10000; i++)
     //{
     //    if(mObjects.at(3)->getIndices()[i])
@@ -439,7 +449,8 @@ void Renderer::startNextFrame()
                 QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
                 ballVelocity += {accVec.x()/ 720.f, 0.0f, accVec.z() / 720.f};
                 mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
-                //ballVelocity *= 0.998f; // friction
+                //qDebug() << "Ball velocity: " << ballVelocity;
+                //ballVelocity *= 0.99998f; // friction
 
                 // Ball barycentric coordinates
                 float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
@@ -449,10 +460,17 @@ void Renderer::startNextFrame()
         }
     }
 
+    if((10.f < ballPosXZ.x() && ballPosXZ.x() < 15.f) && (2.f < ballPosXZ.z() && ballPosXZ.z() < 7.f))
+    {
+        qDebug() << "Ball is inside friction area";
+        ballVelocity *= 0.9f;
+    }
+
     //Handeling input from keyboard and mouse is done in VulkanWindow
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
+
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
     mObjects.at(5)->move(0.01f, 0.f, 0.f);
 
