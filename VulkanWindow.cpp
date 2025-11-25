@@ -257,3 +257,20 @@ void VulkanWindow::movePlayer()
     }
 
 }
+
+void VulkanWindow::moveBall()
+{
+    if(!dynamic_cast<Renderer*>(mRenderer)->checkGameState())
+    {
+        if(mInput.UP)
+            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(9)->move(0.f, 0.f, -mPlayerSpeed);
+        if(mInput.DOWN)
+            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(9)->move(0.f, 0.f, mPlayerSpeed);
+        if(mInput.LEFT)
+            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(9)->move(-mPlayerSpeed, 0.f, 0.f);
+        if(mInput.RIGHT)
+            dynamic_cast<Renderer*>(mRenderer)->mObjects.at(9)->move(mPlayerSpeed, 0.f, 0.f);
+        if(mInput.SPACE)
+            dynamic_cast<Renderer*>(mRenderer)->startGame();
+    }
+}

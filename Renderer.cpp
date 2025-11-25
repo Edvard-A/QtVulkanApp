@@ -94,7 +94,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(9)->setName("Ball");
     mObjects.at(9)->setTextureType(1);
     mObjects.at(9)->scale(1.5f);
-    mObjects.at(9)->move(4.f, 0.f, 5.f);
+    mObjects.at(9)->move(0.f, 10.f, 0.f);
 
     // friction area
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); //10
@@ -442,20 +442,44 @@ void Renderer::startNextFrame()
                 mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
 
 
-                // Ball rolling
-                std::vector<QVector3D> currentTri = heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
-                //qDebug() << "CURRENT TRIANGLE: " << currentTri;
+                if(isGameStarted)
+                {
+                    // Ball rolling
+                    std::vector<QVector3D> currentTri = heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
+                    //qDebug() << "CURRENT TRIANGLE: " << currentTri;
 
-                QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-                ballVelocity += {accVec.x()/ 720.f, 0.0f, accVec.z() / 720.f};
-                mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
-                //qDebug() << "Ball velocity: " << ballVelocity;
-                //ballVelocity *= 0.99998f; // friction
+                    QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
+                    ballVelocity += {accVec.x()/ 7200.f, 0.0f, accVec.z() / 7200.f};
+                    mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
+                    //qDebug() << "Ball velocity: " << ballVelocity;
 
-                // Ball barycentric coordinates
-                float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
-                float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
-                mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
+                    // Ball barycentric coordinates
+                    float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
+                    float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
+                    mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
+
+                    //if((ballVelocity.x() < 0.0000001f && ballVelocity.z() < 0.0001f) && (mObjects.at(9)->getPosition().y() < -1.f))
+                    //{
+                    //    ballVelocity.setX(0.0f);
+                    //    ballVelocity.setZ(0.0f);
+                    //    //ballVelocity = {0.f, 0.f, 0.f}; // set ball to have zero velocity when still enough
+                    //}
+
+
+                    // for(int i = 0; i < 100; i++)
+                    // {
+                    //     std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 10)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 10));
+
+                    //     QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
+                    //     fluidVelocity += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
+                    //     mObjects.at(i + 10)->move(fluidVelocity.x(), fluidVelocity.y(), fluidVelocity.z());
+
+                    //     float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 10)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 10));
+                    //     //qDebug() << "fluid new Y: " << fluidNewY;
+                    //     float fluidDeltaY = fluidNewY - mObjects.at(i + 10)->getPosition().y();
+                    //     mObjects.at(i + 10)->move(0.f, fluidDeltaY, 0.f);
+                    // }
+                }
             }
         }
     }
@@ -470,6 +494,7 @@ void Renderer::startNextFrame()
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
+    mVulkanWindow->moveBall();
 
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
     mObjects.at(5)->move(0.01f, 0.f, 0.f);

@@ -24,6 +24,7 @@ public:
 
     void handleInput();
     void movePlayer();
+    void moveBall();
 
 signals:
     void frameQueued(int colorValue);
