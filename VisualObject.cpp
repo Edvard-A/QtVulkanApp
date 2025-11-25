@@ -84,6 +84,23 @@ void VisualObject::moveEnemy()
     }
 }
 
+bool VisualObject::isBallColliding(VisualObject* otherObject)
+{
+    if( (sqrt((this->getPosition().x() - otherObject->getPosition().x()) * (this->getPosition().x() - otherObject->getPosition().x()))/* - 0.5f*/) < 1.f && // add radius here instead of "6"
+        (sqrt((this->getPosition().z() - otherObject->getPosition().z()) * (this->getPosition().z() - otherObject->getPosition().z()))/* - 0.5f*/) < 1.f)
+    {
+        //qDebug() << otherObject->getPosition().z() - 0.5f;
+        return true;
+    } else
+        return false;
+}
+
+//void VisualObject::collisionBehaviour(VisualObject* otherObject)
+//{
+//
+//    Renderer* R = static_cast<Renderer*>(ok)
+//}
+
 bool VisualObject::isColliding(VisualObject* otherObject)
 {
     if( sqrt((this->getPosition().x() - otherObject->getPosition().x()) * (this->getPosition().x() - otherObject->getPosition().x())) < 6 &&

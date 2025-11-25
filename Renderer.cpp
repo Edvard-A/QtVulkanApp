@@ -496,6 +496,15 @@ void Renderer::startNextFrame()
     mVulkanWindow->movePlayer();
     mVulkanWindow->moveBall();
 
+    // collision handling
+    if(mObjects.at(9)->isBallColliding(mObjects.at(14)))
+    {
+        qDebug() << "ball is colliding with cube";
+        //qDebug() << mObjects.at(14)->getPosition();
+        ballVelocity = {0.f, 0.f, 0.f};
+    }
+
+    // enemy chasing
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
     mObjects.at(5)->move(0.01f, 0.f, 0.f);
 
