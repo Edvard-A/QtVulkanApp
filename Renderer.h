@@ -39,6 +39,7 @@ public:
     std::vector<VisualObject*>& getObjects() { return mObjects; }
     std::unordered_map<std::string, VisualObject*>& getMap() { return mMap; }
     void startGame() { isGameStarted = true; }
+    bool checkGameState() { return isGameStarted; }
 
     bool isGameStarted = false;
 
