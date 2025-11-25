@@ -458,6 +458,21 @@ void Renderer::startNextFrame()
                     float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
                     mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
 
+                    //QVector3D currentNormal = heightMapObj->calculateUnitNormal(currentTri[0], currentTri[1], currentTri[2]);
+
+                    //qDebug() << "Ball Velocity: " << ballVelocity;
+                    QVector2D ballABSVelocity =
+                    {
+                        sqrt(ballVelocity.x() * ballVelocity.x()), sqrt(ballVelocity.z() * ballVelocity.z())
+                    };
+
+                    // stop ball when velocity is low enough
+                    if((ballABSVelocity.x() < 0.0001f && ballABSVelocity.y() < 0.0001f) /*&& currentNormal.y() == 1*/)
+                    {
+                        qDebug() << "ball should stop";
+                        ballVelocity = {0.f, 0.f, 0.f};
+                    }
+
                     //if((ballVelocity.x() < 0.0000001f && ballVelocity.z() < 0.0001f) && (mObjects.at(9)->getPosition().y() < -1.f))
                     //{
                     //    ballVelocity.setX(0.0f);
