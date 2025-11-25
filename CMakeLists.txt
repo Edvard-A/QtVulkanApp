@@ -26,6 +26,7 @@ qt_add_executable(QtVulkanApp
     enemy.h enemy.cpp
     beziercurve.h beziercurve.cpp
     rollingball.h rollingball.cpp
+    cube.h cube.cpp
 )
 # Define the shader files
 set(SHADER_FILES
