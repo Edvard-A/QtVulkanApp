@@ -152,7 +152,7 @@ QVector3D HeightMap::calculateNormal(QVector3D a, QVector3D b, QVector3D c)
     float k = (vecBC.x()*vecBA.y()) - (vecBC.y() * vecBA.x());
 
     QVector3D normalVector = {i, j, k};
-    qDebug() << "Normal Vector: " << normalVector;
+    //qDebug() << "Normal Vector: " << normalVector;
 
     return normalVector;
 }
@@ -164,7 +164,7 @@ QVector3D HeightMap::calculateUnitNormal(QVector3D a, QVector3D b, QVector3D c)
     float normalLength = sqrt((normal.x() * normal.x()) + (normal.y() * normal.y()) + (normal.z() * normal.z()));
     QVector3D unitNormal = {normal.x() / normalLength, normal.y() / normalLength, normal.z() / normalLength};
 
-    qDebug() << "Unit Normal Vector: " << unitNormal;
+    //qDebug() << "Unit Normal Vector: " << unitNormal;
     return unitNormal;
 }
 
@@ -173,7 +173,7 @@ QVector3D HeightMap::calculateAccelerationVec(QVector3D a, QVector3D b, QVector3
     QVector3D unitNormal = calculateUnitNormal(a, b, c);
     QVector3D accelerationVec = {(unitNormal.x() * unitNormal.y() * 9.81f), (unitNormal.y() * unitNormal.y() * 9.81f) - 9.81f, ((unitNormal.z() * unitNormal.y() * 9.81f))}; // from lecture notes eq. (9.14)
 
-    qDebug() << "Acceleration Vector: " << accelerationVec;
+    //qDebug() << "Acceleration Vector: " << accelerationVec;
     return accelerationVec;
 }
 

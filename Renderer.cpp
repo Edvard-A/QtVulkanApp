@@ -548,7 +548,7 @@ void Renderer::startNextFrame()
 
     if((10.f < ballPosXZ.x() && ballPosXZ.x() < 15.f) && (2.f < ballPosXZ.z() && ballPosXZ.z() < 7.f))
     {
-        qDebug() << "Ball is inside friction area";
+        //qDebug() << "Ball is inside friction area";
         ballVelocity *= 0.9f;
     }
 
@@ -559,12 +559,12 @@ void Renderer::startNextFrame()
     mVulkanWindow->moveBall();
 
     // collision handling
-    if(mObjects.at(9)->isBallColliding(mObjects.at(14)))
-    {
-        qDebug() << "ball is colliding with cube";
-        //qDebug() << mObjects.at(14)->getPosition();
-        ballVelocity = {0.f, 0.f, 0.f};
-    }
+    //if(mObjects.at(9)->isBallColliding(mObjects.at(14)))
+    //{
+    //    qDebug() << "ball is colliding with cube";
+    //    //qDebug() << mObjects.at(14)->getPosition();
+    //    //ballVelocity = {0.f, 0.f, 0.f};
+    //}
 
     // enemy chasing
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
