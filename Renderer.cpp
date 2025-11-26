@@ -499,6 +499,22 @@ void Renderer::startNextFrame()
         }
     }
 
+    mFrameCounter++;
+
+    // this does read new spheres at the ball's previous position, but does not render them
+    if(mFrameCounter % 20 == 0) // every 20th frame
+    {
+        qDebug() << "20 frames have passed: ";
+        QVector3D newBallPos {0.f, 0.f, 0.f};
+        newBallPos = mObjects.at(9)->getPosition();
+        mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+        mObjects.at(mObjects.size()-1)->move(newBallPos.x(), newBallPos.y(), newBallPos.z());
+        mObjects.at(mObjects.size()-1)->scale(0.2f);
+        qDebug() << mObjects.size() - 1;
+        qDebug() << mObjects.at(mObjects.size()-1)->getPosition();
+    }
+
+
     if((10.f < ballPosXZ.x() && ballPosXZ.x() < 15.f) && (2.f < ballPosXZ.z() && ballPosXZ.z() < 7.f))
     {
         qDebug() << "Ball is inside friction area";
