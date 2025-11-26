@@ -11,6 +11,7 @@
 #include "ObjMesh.h"
 #include "player.h"
 #include "rollingball.h"
+#include "cube.h"
 
 /*** Renderer class ***/
 Renderer::Renderer(QVulkanWindow *w, bool msaa)
@@ -105,6 +106,30 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(12)->move(10.f, 3.5f, 7.f);
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 13
     mObjects.at(13)->move(15.f, 3.5f, 7.f);
+
+    // static collision obstacle
+    mObjects.push_back(new Cube);
+    mObjects.at(14)->move(-2.f, 0.f, -2.5f);
+
+    mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+    mObjects.at(15)->move(-2.5f, 0.f, -2.5f);
+
+    // triangulation example
+    mObjects.push_back(new TriangleSurface("C:\\Users\\edvar\\Documents\\HINN\\Visualisation&Simulation\\Exam\\triangulationExample.txt"));
+    mObjects.at(16)->setDrawType(0);
+
+    // fluids
+    // for(int i = 0; i < 100; i++)
+    // {
+    //     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+    //     mObjects.at(mObjects.size() - 1)->setTextureType(1);
+    //     mObjects.at(mObjects.size() - 1)->scale(0.5f);
+    //     mObjects.at(mObjects.size() - 1)->move(i * 0.02f, 0.f, 0.f);
+
+    // }
+
+    // Triangulated Surface
+
 
     //for(int i; i < 10000; i++)
     //{
