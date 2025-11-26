@@ -84,15 +84,37 @@ void VisualObject::moveEnemy()
     }
 }
 
-bool VisualObject::isBallColliding(VisualObject* otherObject)
+bool VisualObject::isBallCollidingZ(VisualObject* otherObject)
 {
-    if( (sqrt((this->getPosition().x() - otherObject->getPosition().x()) * (this->getPosition().x() - otherObject->getPosition().x()))/* - 0.5f*/) < 1.f && // add radius here instead of "6"
-        (sqrt((this->getPosition().z() - otherObject->getPosition().z()) * (this->getPosition().z() - otherObject->getPosition().z()))/* - 0.5f*/) < 1.f)
+    QVector3D distance = {this->getPosition().x() - (-2.5f), 0.f, this->getPosition().z() - (-2.5f)};
+    //qDebug() << distance;
+
+    if((sqrt(distance.x() * distance.x()) < 1.f) && (sqrt(distance.z() * distance.z()) < 1.f))
     {
-        //qDebug() << otherObject->getPosition().z() - 0.5f;
+        //qDebug() << "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii";
         return true;
     } else
         return false;
+    //qDebug() << "X coordinate difference: " << sqrt((this->getPosition().x() - (-2.5)) * (this->getPosition().x() - (-2.5)));
+    //qDebug() << "Z coordinate difference: " << sqrt((this->getPosition().z() - (-2.5)) * (this->getPosition().z() - (-2.5)));
+    //if((sqrt((this->getPosition().z() - (-2.5)) * (this->getPosition().z() - (-2.5))) < 1.f) &&
+    //    sqrt((this->getPosition().x() - (-2.5)) * (this->getPosition().x() - (-2.5))) < 1.f)
+    //{
+    //    qDebug() << "hello hello helloooooooooooooooooooooooooooooooooooooo!!";
+    //    return true;
+    //} else
+    //    return false;
+
+
+
+
+    //if( (sqrt((this->getPosition().x() - otherObject->getPosition().x()) * (this->getPosition().x() - otherObject->getPosition().x()))/* - 0.5f*/) < 1.f && // add radius here instead of "6"
+    //    (sqrt((this->getPosition().z() - otherObject->getPosition().z()) * (this->getPosition().z() - otherObject->getPosition().z()))/* - 0.5f*/) < 1.f)
+    //{
+    //    //qDebug() << otherObject->getPosition().z() - 0.5f;
+    //    return true;
+    //} else
+    //    return false;
 }
 
 //void VisualObject::collisionBehaviour(VisualObject* otherObject)

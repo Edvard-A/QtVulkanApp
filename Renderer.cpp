@@ -498,6 +498,12 @@ void Renderer::startNextFrame()
                         ballVelocity = {0.f, 0.f, 0.f};
                     }
 
+                    if(mObjects.at(9)->isBallCollidingZ(mObjects.at(14)))
+                    {
+                        qDebug() << "ball is colliding with cube";
+                        ballVelocity.setZ(0.f);
+                    }
+
                     //if((ballVelocity.x() < 0.0000001f && ballVelocity.z() < 0.0001f) && (mObjects.at(9)->getPosition().y() < -1.f))
                     //{
                     //    ballVelocity.setX(0.0f);

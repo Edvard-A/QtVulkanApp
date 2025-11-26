@@ -18,7 +18,8 @@ public:
 
     void moveEnemy();
 
-    bool isBallColliding(VisualObject* otherObject);
+    bool isBallCollidingZ(VisualObject* otherObject);
+    //void collisionBehaviour(VisualObject* otherObject);
     bool isColliding(VisualObject* otherObject);
     void chase(VisualObject* otherObject, float speed, QVector3D anchor);
 
