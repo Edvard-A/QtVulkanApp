@@ -511,10 +511,6 @@ void Renderer::startNextFrame()
                     mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
                     //qDebug() << "Ball velocity: " << ballVelocity;
 
-                    // Ball barycentric coordinates
-                    float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
-                    float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
-                    mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
 
                     //QVector3D currentNormal = heightMapObj->calculateUnitNormal(currentTri[0], currentTri[1], currentTri[2]);
 
@@ -529,6 +525,8 @@ void Renderer::startNextFrame()
                     {
                         qDebug() << "ball should stop";
                         ballVelocity = {0.f, 0.f, 0.f};
+                        stopGame();
+
                     }
 
                     if(mObjects.at(9)->isBallCollidingZ(mObjects.at(14)))
