@@ -30,6 +30,7 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
 {
     //Default normal pointing straight up - should be calculated correctly for lights to work!!!
     float normal[3]{0.f, 1.f, 0.f};
+    float maxY = 0;
 
     //How many meters(units) between each vertex in both x and z direction
     //This should be sent in as a parameter!
@@ -71,10 +72,14 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
             // Calculate the correct index for the R value of each pixel
             int index = (w + d * width) * 4; // Each pixel has 4 bytes (RGBA)
             float heightFromBitmap = static_cast<float>(textureData[index]) * heightSpacing + heightPlacement;
+
+            if(heightFromBitmap > maxY)
+                maxY = heightFromBitmap;
+
 			//                                          x - value                      y-value               z-value
             mVertices.emplace_back(Vertex{vertexXStart + (w * horisontalSpacing), heightFromBitmap, vertexZStart - (d * horisontalSpacing),
 				//  dummy normal=0,1,0                  Texture coordinates
-                normal[0],normal[1],normal[2],           w / (width - 1.f), d / (depth - 1.f)});
+                                          (heightFromBitmap / maxY + 0.5f) / 2.f, 0.f, (heightFromBitmap / maxY + 0.5f),           w / (width - 1.f), d / (depth - 1.f)});
         }
     }
 
@@ -99,6 +104,14 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
             mIndices.emplace_back(w + d * width + width + 1);   // 0 + 0 * mWidth + mWidth + 1  = mWidth + 1
         }
     }
+
+    //for(int i = 0; i < mVertices.size(); i++)
+    //{
+    //    if((mVertices.at(i).x < 15.f && mVertices.at(5).x > 10.f) && (mVertices.at(i).z < 15.f && mVertices.at(i).z > 10.f))
+    //    {
+    //        mVertices.push_back(mVertices.at(i));
+    //    }
+    //}
 
     //qDebug() << "width was changed: " << width;
 
