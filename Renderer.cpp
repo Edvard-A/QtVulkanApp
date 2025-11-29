@@ -598,7 +598,6 @@ void Renderer::startNextFrame()
      *      but the trace is not drawn due to this code not supporting drawing new objects outside of the renderer's initialisation.
      **/
 
-    mFrameCounter++;
     // activating fluid sim balls gradually each 10th frame
     //if((mFrameCounter % 10 == 0) && mFrameCounter < 1000)
     //{
@@ -689,6 +688,9 @@ void Renderer::startNextFrame()
 
     //Hardcoded!!!
     //mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);
+
+    // counting how many frames have passed
+    mFrameCounter++;
     
     mWindow->frameReady();
     mWindow->requestUpdate(); // render continuously, throttled by the presentation rate
