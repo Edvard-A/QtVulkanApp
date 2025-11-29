@@ -38,7 +38,8 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(0)->setName("tri");                               // name
     mObjects.at(1)->setName("quad");
     mObjects.at(0)->move(1111, 0, 0);                             // move
-    mObjects.at(1)->move(1111, 0, 0);
+    mObjects.at(1)->setPosition(-25.f, -2.5f, -10.f);
+    mObjects.at(1)->setTextureType(2);
 
     // Axis
     mObjects.push_back((new WorldAxis()));
@@ -649,7 +650,7 @@ void Renderer::startNextFrame()
     mDeviceFunctions->vkCmdEndRenderPass(commandBuffer);
 
     //Hardcoded!!!
-    mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);
+    //mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);
     
     mWindow->frameReady();
     mWindow->requestUpdate(); // render continuously, throttled by the presentation rate
