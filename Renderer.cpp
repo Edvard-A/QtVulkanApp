@@ -140,14 +140,12 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
      *      TASK 2.7 - Fluid simulation
      *      Below, we initialise 100 spheres that all start from different points in a line
      **/
-    // fluids
     // for(int i = 0; i < 100; i++)
     // {
     //     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
     //     mObjects.at(mObjects.size() - 1)->setTextureType(1);
     //     mObjects.at(mObjects.size() - 1)->scale(0.5f);
-    //     mObjects.at(mObjects.size() - 1)->move(i * 0.02f, 0.f, 0.f);
-
+    //     //mObjects.at(mObjects.size() - 1)->move(i * 0.02f, 0.f, 0.f);
     // }
 
     // Triangulated Surface
@@ -565,28 +563,30 @@ void Renderer::startNextFrame()
                         }
                     }
 
-
-
-                    // for(int i = 0; i < 100; i++)
-                    // {
-                    //     std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 10)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 10));
                     /**
                      *      TASK 2.7 - Fluid simulation
                      *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
                      *      These are expensive calculation as they are written now, so the program will lag
                      **/
                 }
+                // for(int i = 0; i < 100; i++)
+                // {
+                //     qDebug() << "this runs";
+                //     std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 16)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 16));
 
-                    //     QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-                    //     fluidVelocity += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
-                    //     mObjects.at(i + 10)->move(fluidVelocity.x(), fluidVelocity.y(), fluidVelocity.z());
+                //     QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
+                //     fluidVelocity += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
+                //     mObjects.at(i + 16)->move(fluidVelocity.x(), fluidVelocity.y(), fluidVelocity.z());
 
-                    //     float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 10)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 10));
-                    //     //qDebug() << "fluid new Y: " << fluidNewY;
-                    //     float fluidDeltaY = fluidNewY - mObjects.at(i + 10)->getPosition().y();
-                    //     mObjects.at(i + 10)->move(0.f, fluidDeltaY, 0.f);
-                    // }
-                }
+                //     float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 16)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 16));
+                //     //qDebug() << "fluid new Y: " << fluidNewY;
+                //     float fluidDeltaY = fluidNewY - mObjects.at(i + 16)->getPosition().y();
+                //     if(mObjects.at(i + 16)->getActiveState())
+                //     {
+                //         mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
+                //     }
+                //     //mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
+                // }
             }
         }
     }
@@ -599,6 +599,11 @@ void Renderer::startNextFrame()
      **/
 
     mFrameCounter++;
+    // activating fluid sim balls gradually each 10th frame
+    //if((mFrameCounter % 10 == 0) && mFrameCounter < 1000)
+    //{
+    //    mObjects.at((mFrameCounter / 10) + 16)->activateObj();
+    //}
 
     // this does read new spheres at the ball's previous position, but does not render them
     if(mFrameCounter % 20 == 0) // every 20th frame

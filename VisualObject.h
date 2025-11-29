@@ -56,6 +56,10 @@ public:
     void setZ(float z);
     void vecSetPosition(QVector3D newPosition);
 
+    void activateObj() { bIsActive = true; }
+    void deactivateObj() { bIsActive = false; }
+    bool getActiveState() { return bIsActive; }
+
 protected:
     std::vector<Vertex> mVertices;
     std::vector<uint32_t> mIndices;
@@ -68,6 +72,7 @@ protected:
 
     int drawType{ 0 }; // 0 = fill, 1 = line
 
+    bool bIsActive = false;
 
     int textureType{0};
     enum textureType
