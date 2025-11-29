@@ -508,7 +508,7 @@ void Renderer::startNextFrame()
                     //qDebug() << "CURRENT TRIANGLE: " << currentTri;
 
                     QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-                    ballVelocity += {accVec.x()/ 7200.f, 0.0f, accVec.z() / 7200.f};
+                    ballVelocity += {accVec.x()/ 3600.f, 0.0f, accVec.z() / 3600.f};
                     mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
                     //qDebug() << "Ball velocity: " << ballVelocity;
                     ballVelocity *= 0.998f; // friction
