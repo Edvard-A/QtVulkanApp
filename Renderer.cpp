@@ -531,6 +531,14 @@ void Renderer::startNextFrame()
 
                     }
 
+                    /**
+                     *    Ball collision bejaviour - flip vector along normal
+                     **/
+                    if(mObjects.at(9)->getPosition().z() < (-10.f))
+                        ballVelocity.setZ(ballVelocity.z() * (-0.8f));
+
+
+
                     if(mObjects.at(9)->isBallCollidingZ(mObjects.at(14)))
                     {
                         qDebug() << "ball is colliding with cube";
