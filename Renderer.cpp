@@ -132,9 +132,9 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
     mObjects.at(15)->move(-2.5f, 0.f, -2.5f);
 
-    // triangulation example
-    mObjects.push_back(new TriangleSurface("C:\\Users\\edvar\\Documents\\HINN\\Visualisation&Simulation\\Exam\\triangulationExample.txt"));
-    mObjects.at(16)->setDrawType(0);
+    //// triangulation example
+    //mObjects.push_back(new TriangleSurface("C:\\Users\\edvar\\Documents\\HINN\\Visualisation&Simulation\\Exam\\triangulationExample.txt"));
+    //mObjects.at(16)->setDrawType(0);
 
     // fluids
     // for(int i = 0; i < 100; i++)
