@@ -510,6 +510,7 @@ void Renderer::startNextFrame()
                     ballVelocity += {accVec.x()/ 7200.f, 0.0f, accVec.z() / 7200.f};
                     mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
                     //qDebug() << "Ball velocity: " << ballVelocity;
+                    ballVelocity *= 0.998f; // friction
 
 
                     //QVector3D currentNormal = heightMapObj->calculateUnitNormal(currentTri[0], currentTri[1], currentTri[2]);
@@ -581,6 +582,7 @@ void Renderer::startNextFrame()
     {
         //qDebug() << "Ball is inside friction area";
         ballVelocity *= 0.9f;
+        ballVelocity *= 0.95f;
     }
 
     //Handeling input from keyboard and mouse is done in VulkanWindow
