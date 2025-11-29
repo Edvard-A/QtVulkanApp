@@ -98,7 +98,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(9)->scale(1.5f);
     mObjects.at(9)->move(0.f, 10.f, 0.f);
 
-    // friction area
+    /// TASK 2.3 - Spheres for visualising friction area bounds
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); //10
     mObjects.at(10)->move(10.f, 3.5f, 2.f);
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 11
@@ -108,7 +108,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 13
     mObjects.at(13)->move(15.f, 3.5f, 7.f);
 
-    // place edges of friction area down on terrain
+    // place corners of friction area down on the surface
     for(auto obj : mObjects){
         if(obj->getName() == "terrain")
         {
@@ -125,7 +125,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
         }
     }
 
-    // static collision obstacle
+    /// TASK 2.4 - static collision obstacle
     mObjects.push_back(new Cube);
     mObjects.at(14)->setPosition(-2.f, 0.f, -2.5f);
 
@@ -136,6 +136,10 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     //mObjects.push_back(new TriangleSurface("C:\\Users\\edvar\\Documents\\HINN\\Visualisation&Simulation\\Exam\\triangulationExample.txt"));
     //mObjects.at(16)->setDrawType(0);
 
+    /**
+     *      TASK 2.7 - Fluid simulation
+     *      Below, we initialise 100 spheres that all start from different points in a line
+     **/
     // fluids
     // for(int i = 0; i < 100; i++)
     // {
@@ -466,7 +470,7 @@ void Renderer::startNextFrame()
     QVector3D posXZ = QVector3D(mObjects.at(5)->getPosition().x(), 0.f, mObjects.at(5)->getPosition().z()); // getting the XZ coordinates of the player
     QVector3D enemyPosXZ = QVector3D(mObjects.at(6)->getPosition().x(), 0.f, mObjects.at(6)->getPosition().z()); // getting the XZ coordinates of the enemy
 
-    QVector3D ballPosXZ = QVector3D(mObjects.at(9)->getPosition().x(), 0.0f, mObjects.at(9)->getPosition().z());
+    QVector3D ballPosXZ = QVector3D(mObjects.at(9)->getPosition().x(), 0.0f, mObjects.at(9)->getPosition().z()); // ball position in XZ plane
 
     for(auto obj : mObjects){
         if(obj->getName() == "terrain")
@@ -494,51 +498,60 @@ void Renderer::startNextFrame()
                     mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
                 }
 
-
                 if(isGameStarted)
                 {
 
+                    /**
+                     *      TASK 2.1 - Ball rolling on surface
+                     *      This algorhithm is adapted from the VISIM 2025 lecture notes using equation 9.14 in chapter 9.4 - Simulering av rullende ball
+                     **/
                     // Ball barycentric coordinates
                     float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
                     float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
                     mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
 
-                    // Ball rolling
+                    /// Ball rolling
+                    // Checking which triangle the ball is on in the XZ plane
                     std::vector<QVector3D> currentTri = heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
-                    //qDebug() << "CURRENT TRIANGLE: " << currentTri;
 
+                    // Find the acceleration vector for that triangle
                     QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-                    ballVelocity += {accVec.x()/ 3600.f, 0.0f, accVec.z() / 3600.f};
+
+                    // Adjust velocity vector according to acceleration vector for current triangle
+                    ballVelocity += {accVec.x()/ 3600.f, accVec.y() / 3600.f, accVec.z() / 3600.f};
+
+                    // Move ball using velocity vector
                     mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
-                    //qDebug() << "Ball velocity: " << ballVelocity;
-                    ballVelocity *= 0.998f; // friction
+                    //ballVelocity *= 0.998f; // friction
 
-
+                    /**
+                     *      TASK 2.2 - Ball falls to rest
+                     *      We check if the absolute value of the velocity is lower than a chosen threshold
+                     *      and then stop the ball completely if it is.
+                     *      stopGame() sets the game state to false and allows us to reposition the ball again
+                     **/
                     //QVector3D currentNormal = heightMapObj->calculateUnitNormal(currentTri[0], currentTri[1], currentTri[2]);
-
-                    //qDebug() << "Ball Velocity: " << ballVelocity;
-                    QVector2D ballABSVelocity =
-                    {
-                        sqrt(ballVelocity.x() * ballVelocity.x()), sqrt(ballVelocity.z() * ballVelocity.z())
-                    };
-
-                    // stop ball when velocity is low enough
+                    QVector2D ballABSVelocity = { sqrt(ballVelocity.x() * ballVelocity.x()), sqrt(ballVelocity.z() * ballVelocity.z()) };
                     if((ballABSVelocity.x() < 0.0001f && ballABSVelocity.y() < 0.0001f) /*&& currentNormal.y() == 1*/)
                     {
                         qDebug() << "ball should stop";
                         ballVelocity = {0.f, 0.f, 0.f};
                         stopGame();
-
                     }
 
                     /**
-                     *    Ball collision bejaviour - flip vector along normal
+                     *      Ball collision behaviour - flip vector along normal
+                     *      Collision between ball and plane
                      **/
                     if(mObjects.at(9)->getPosition().z() < (-10.f))
                         ballVelocity.setZ(ballVelocity.z() * (-0.8f));
 
-
-
+                    /**
+                     *      TASK 2.4 - Ball collision detection & behaviour with cube
+                     *      We check if the ball is colliding with either the XY or ZY plane of the cube
+                     *      Then flip the velocity vector along the normal of that plane
+                     *      (We use -0.8f to have some velocity falloff from the collision, use -1.f if no falloff)
+                     **/
                     if(mObjects.at(9)->isBallCollidingZ(mObjects.at(14)))
                     {
                         if((mObjects.at(9)->getPosition().z() > -2.6f) || (mObjects.at(9)->getPosition().z() < -3.4f))
@@ -550,24 +563,19 @@ void Renderer::startNextFrame()
                             qDebug() << "ball is colliding with cube on a x plane!";
                             ballVelocity.setX(ballVelocity.x() * (-0.8f));
                         }
-                        //if((mObjects.at(9)->getPosition().x() > -1.1f) || (mObjects.at(9)->getPosition().z() < -1.9f))
-                        //{
-                        //    qDebug() << "ball is colliding with cube on a x plane!";
-                        //    ballVelocity.setX(ballVelocity.x() * (-0.8f));
-                        //}
                     }
 
-                    //if((ballVelocity.x() < 0.0000001f && ballVelocity.z() < 0.0001f) && (mObjects.at(9)->getPosition().y() < -1.f))
-                    //{
-                    //    ballVelocity.setX(0.0f);
-                    //    ballVelocity.setZ(0.0f);
-                    //    //ballVelocity = {0.f, 0.f, 0.f}; // set ball to have zero velocity when still enough
-                    //}
 
 
                     // for(int i = 0; i < 100; i++)
                     // {
                     //     std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 10)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 10));
+                    /**
+                     *      TASK 2.7 - Fluid simulation
+                     *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
+                     *      These are expensive calculation as they are written now, so the program will lag
+                     **/
+                }
 
                     //     QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
                     //     fluidVelocity += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
@@ -582,6 +590,13 @@ void Renderer::startNextFrame()
             }
         }
     }
+
+    /**
+     *      TASK 2.5 - Draw ball trace
+     *      This function is called every 20th frame, and draws a point for at the ball's previous recorded position.
+     *      The trace is technically there in the code, loading in objects at the ball's previous positions,
+     *      but the trace is not drawn due to this code not supporting drawing new objects outside of the renderer's initialisation.
+     **/
 
     mFrameCounter++;
 
@@ -599,6 +614,11 @@ void Renderer::startNextFrame()
     }
 
 
+    /**
+     *      TASK 2.3 - Friction
+     *      We initialise a defined area of the surface where the friction is noticeably higher.
+     *      This area is visualised using four spheres as corners rendered on the surface.
+     **/
     if((10.f < ballPosXZ.x() && ballPosXZ.x() < 15.f) && (2.f < ballPosXZ.z() && ballPosXZ.z() < 7.f))
     {
         //qDebug() << "Ball is inside friction area";
@@ -606,19 +626,12 @@ void Renderer::startNextFrame()
         ballVelocity *= 0.95f;
     }
 
-    //Handeling input from keyboard and mouse is done in VulkanWindow
-    //Has to be done each frame to get smooth movement
+    // Input handling for camera and player movement
     mVulkanWindow->handleInput();
     mVulkanWindow->movePlayer();
-    mVulkanWindow->moveBall();
 
-    // collision handling
-    //if(mObjects.at(9)->isBallColliding(mObjects.at(14)))
-    //{
-    //    qDebug() << "ball is colliding with cube";
-    //    //qDebug() << mObjects.at(14)->getPosition();
-    //    //ballVelocity = {0.f, 0.f, 0.f};
-    //}
+    /// TASK 2.2 - Interactivity
+    mVulkanWindow->moveBall();
 
     // enemy chasing
     mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
