@@ -484,8 +484,24 @@ void Renderer::startNextFrame()
                 mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
 
 
+                // this check is used for holding the ball a bit above the terrain before you place its starting position
+                if(!isGameStarted)
+                {
+                    // Ball barycentric coordinates
+                    float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
+                    float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y() + 1.f;
+                    mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
+                }
+
+
                 if(isGameStarted)
                 {
+
+                    // Ball barycentric coordinates
+                    float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
+                    float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
+                    mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
+
                     // Ball rolling
                     std::vector<QVector3D> currentTri = heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
                     //qDebug() << "CURRENT TRIANGLE: " << currentTri;
