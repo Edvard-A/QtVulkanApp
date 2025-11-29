@@ -127,10 +127,10 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
 
     // static collision obstacle
     mObjects.push_back(new Cube);
-    mObjects.at(14)->move(-2.f, 0.f, -2.5f);
+    mObjects.at(14)->setPosition(-2.f, 0.f, -2.5f);
 
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-    mObjects.at(15)->move(-2.5f, 0.f, -2.5f);
+    mObjects.at(15)->setPosition(-1.5f, 0.f, -2.5f);
 
     //// triangulation example
     //mObjects.push_back(new TriangleSurface("C:\\Users\\edvar\\Documents\\HINN\\Visualisation&Simulation\\Exam\\triangulationExample.txt"));
