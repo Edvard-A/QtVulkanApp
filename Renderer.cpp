@@ -107,6 +107,23 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 13
     mObjects.at(13)->move(15.f, 3.5f, 7.f);
 
+    // place edges of friction area down on terrain
+    for(auto obj : mObjects){
+        if(obj->getName() == "terrain")
+        {
+            HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
+            if(heightMapObj)
+            {
+                for(int i = 10; i < 14; i++)
+                {
+                    float areaNewY = heightMapObj->getHeightOnMap(mObjects.at(i)->getPosition().x(), mObjects.at(i)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i));
+                    float areaDeltaY = areaNewY - mObjects.at(i)->getPosition().y();
+                    mObjects.at(i)->move(0.f, areaDeltaY, 0.f);
+                }
+            }
+        }
+    }
+
     // static collision obstacle
     mObjects.push_back(new Cube);
     mObjects.at(14)->move(-2.f, 0.f, -2.5f);
