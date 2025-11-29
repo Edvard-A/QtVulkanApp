@@ -86,15 +86,25 @@ void VisualObject::moveEnemy()
 
 bool VisualObject::isBallCollidingZ(VisualObject* otherObject)
 {
-    QVector3D distance = {this->getPosition().x() - (-2.5f), 0.f, this->getPosition().z() - (-2.5f)};
-    //qDebug() << distance;
 
-    if((sqrt(distance.x() * distance.x()) < 1.f) && (sqrt(distance.z() * distance.z()) < 1.f))
-    {
-        //qDebug() << "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii";
+    float distanceZ = this->getPosition().z() - (-3.f);  // exchange with cube positionZ
+    float distanceX = this->getPosition().x() - (-1.5f); // exchange with cube positionX
+
+    if((sqrt(distanceZ * distanceZ) < 0.5f) && (sqrt(distanceX * distanceX) < 0.5f))
         return true;
-    } else
+    else
         return false;
+
+
+    //QVector3D distance = {this->getPosition().x() - (-1.5f), 0.f, this->getPosition().z() - (-3.5f)};
+    ////qDebug() << distance;
+
+    //if((sqrt(distance.x() * distance.x()) < 1.f) && (sqrt(distance.z() * distance.z()) < 1.f))
+    //{
+    //    //qDebug() << "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii";
+    //    return true;
+    //} else
+    //    return false;
     //qDebug() << "X coordinate difference: " << sqrt((this->getPosition().x() - (-2.5)) * (this->getPosition().x() - (-2.5)));
     //qDebug() << "Z coordinate difference: " << sqrt((this->getPosition().z() - (-2.5)) * (this->getPosition().z() - (-2.5)));
     //if((sqrt((this->getPosition().z() - (-2.5)) * (this->getPosition().z() - (-2.5))) < 1.f) &&

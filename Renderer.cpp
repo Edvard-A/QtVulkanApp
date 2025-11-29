@@ -541,8 +541,20 @@ void Renderer::startNextFrame()
 
                     if(mObjects.at(9)->isBallCollidingZ(mObjects.at(14)))
                     {
-                        qDebug() << "ball is colliding with cube";
-                        ballVelocity.setZ(0.f);
+                        if((mObjects.at(9)->getPosition().z() > -2.6f) || (mObjects.at(9)->getPosition().z() < -3.4f))
+                        {
+                            qDebug() << "ball is colliding with cube on a Z plane!";
+                            ballVelocity.setZ(ballVelocity.z() * (-0.8f));
+                        } else if((mObjects.at(9)->getPosition().x() > -1.1f) || (mObjects.at(9)->getPosition().z() < -1.9f))
+                        {
+                            qDebug() << "ball is colliding with cube on a x plane!";
+                            ballVelocity.setX(ballVelocity.x() * (-0.8f));
+                        }
+                        //if((mObjects.at(9)->getPosition().x() > -1.1f) || (mObjects.at(9)->getPosition().z() < -1.9f))
+                        //{
+                        //    qDebug() << "ball is colliding with cube on a x plane!";
+                        //    ballVelocity.setX(ballVelocity.x() * (-0.8f));
+                        //}
                     }
 
                     //if((ballVelocity.x() < 0.0000001f && ballVelocity.z() < 0.0001f) && (mObjects.at(9)->getPosition().y() < -1.f))
