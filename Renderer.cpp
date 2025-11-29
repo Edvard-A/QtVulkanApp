@@ -604,14 +604,13 @@ void Renderer::startNextFrame()
     //    mObjects.at((mFrameCounter / 10) + 16)->activateObj();
     //}
 
-    // this does read new spheres at the ball's previous position, but does not render them
     if(mFrameCounter % 20 == 0) // every 20th frame
     {
         qDebug() << "20 frames have passed: ";
         QVector3D newBallPos {0.f, 0.f, 0.f};
         newBallPos = mObjects.at(9)->getPosition();
         mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-        mObjects.at(mObjects.size()-1)->move(newBallPos.x(), newBallPos.y(), newBallPos.z());
+        mObjects.at(mObjects.size()-1)->setPosition(newBallPos.x(), newBallPos.y(), newBallPos.z());
         mObjects.at(mObjects.size()-1)->scale(0.2f);
         qDebug() << mObjects.size() - 1;
         qDebug() << mObjects.at(mObjects.size()-1)->getPosition();
