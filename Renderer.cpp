@@ -516,7 +516,7 @@ void Renderer::startNextFrame()
                     QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
 
                     // Adjust velocity vector according to acceleration vector for current triangle
-                    ballVelocity += {accVec.x()/ 3600.f, accVec.y() / 3600.f, accVec.z() / 3600.f};
+                    ballVelocity += {accVec.x()/ 3600.f, 0.f, accVec.z() / 3600.f};
 
                     // Move ball using velocity vector
                     mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
