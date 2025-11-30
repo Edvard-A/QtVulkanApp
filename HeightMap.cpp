@@ -22,102 +22,60 @@ void HeightMap::makeTerrain(std::string heightMapImage)
 	stbi_image_free(pixelData);
 }
 
-//Function that makes a terrain grid from a heightmap, using the values in the heightmap as height.
-//This function will crash if the width and height of the heightmap is not set correct!
-//The size of the textureData array is widthIn * heightIn.
-// The function is not tested in this codebase, and is provided as an example.
 void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightIn)
 {
-    //Default normal pointing straight up - should be calculated correctly for lights to work!!!
     float normal[3]{0.f, 1.f, 0.f};
     float maxY = 0;
 
-    //How many meters(units) between each vertex in both x and z direction
-    //This should be sent in as a parameter!
     float horisontalSpacing{.2f};
 
-    //Scaling the height read from the heightmap. 0 -> 255 meters(units) if this is set to 1
-    //This should be sent in as a parameter!
     float heightSpacing{.1f};
 
     //Offset the whole terrain in y (height) axis
-    //Moves the terrain mesh up or down
-    //Because of Barycentric calculations, we want the terrain to be in World coordinates!
-	//So we don't want to move the terrain up or down in the Y axis after it is made
     float heightPlacement{-5.f};
 
-    //Getting the scale of the heightmap
-    //Using depth as the name of texture height, to not confuse with terrain height
     unsigned short width = widthIn;       //Width == x-axis
     unsigned short depth = heightIn;      //Depth == z-axis
-
-    //qDebug() << "width was changed: " << widthIn;
 
     //Temp variables for creating the mesh
     //Adding offset so the middle of the terrain will be in World origo
     float vertexXStart{ 0.f - width * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f - width * horisontalSpacing / 2};
     float vertexZStart{ 0.f + depth * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f + depth * horisontalSpacing / 2};
 
-    //saafloat vertexXStart{ 0.f };
-    //saafloat vertexZStart{ 0.f };
-
-    //Loop to make the mesh from the values read from the heightmap (textureData)
 	//Double for-loop to make the depth and the width of the terrain in one go
     for(int d{0}; d < depth; ++d)       //depth loop
     {
         for(int w{0}; w < width; ++w)   //width loop
         {
-            //Heightmap image is actually stored as an one dimentional array - so calculating the correct index for column and row
-            //and scale it according to variables
-            // Calculate the correct index for the R value of each pixel
-            int index = (w + d * width) * 4; // Each pixel has 4 bytes (RGBA)
+            int index = (w + d * width) * 4;
             float heightFromBitmap = static_cast<float>(textureData[index]) * heightSpacing + heightPlacement;
 
             if(heightFromBitmap > maxY)
                 maxY = heightFromBitmap;
 
-			//                                          x - value                      y-value               z-value
-            mVertices.emplace_back(Vertex{vertexXStart + (w * horisontalSpacing), heightFromBitmap, vertexZStart - (d * horisontalSpacing),
-				//  dummy normal=0,1,0                  Texture coordinates
-                                          (heightFromBitmap / maxY + 0.5f) / 2.f, 0.f, (heightFromBitmap / maxY + 0.5f),           w / (width - 1.f), d / (depth - 1.f)});
+            /**
+             *      TASK 1.3 - Shading
+             *      Applying height dependent colour onto each vertex to make a dark to light gradient
+             **/
+            mVertices.emplace_back(Vertex{vertexXStart + (w * horisontalSpacing), heightFromBitmap, vertexZStart - (d * horisontalSpacing),     // Position
+                                         (heightFromBitmap / maxY + 0.5f) / 2.f, 0.f, (heightFromBitmap / maxY + 0.5f),                         // Normals / RGB values (height dependent gradient)
+                                          w / (width - 1.f), d / (depth - 1.f)});                                                               // UV coordinates
         }
     }
 
-    //qDebug() << "width was changed: " << width;
-    // The mesh(grid) is drawn in quads with diagonals from lower left to upper right
-    //          _ _
-    //         |/|/|
-    //          - -
-    //         |/|/|
-    //          - -
-    //Making the indices for this mesh:
-    for(int d{0}; d < depth-1; ++d)        //depth - 1 because we draw the last quad from depth - 1 and in negative z direction
+    for(int d{0}; d < depth-1; ++d)        //depth loop
     {
-        for(int w{0}; w < width-1; ++w)    //width - 1 because we draw the last quad from width - 1 and in positive x direction
+        for(int w{0}; w < width-1; ++w)    //width loop
         {
 			//Indices for one quad:
-            mIndices.emplace_back(w + d * width);               // 0 + 0 * mWidth               = 0
-            mIndices.emplace_back(w + d * width + width + 1);   // 0 + 0 * mWidth + mWidth + 1  = mWidth + 1
-            mIndices.emplace_back(w + d * width + width);       // 0 + 0 * mWidth + mWidth      = mWidth
-            mIndices.emplace_back(w + d * width);               // 0 + 0 * mWidth               = 0
-            mIndices.emplace_back(w + d * width + 1);           // 0 + 0 * mWidth + 1           = 1
-            mIndices.emplace_back(w + d * width + width + 1);   // 0 + 0 * mWidth + mWidth + 1  = mWidth + 1
+            mIndices.emplace_back(w + d * width);
+            mIndices.emplace_back(w + d * width + width + 1);
+            mIndices.emplace_back(w + d * width + width);
+            mIndices.emplace_back(w + d * width);
+            mIndices.emplace_back(w + d * width + 1);
+            mIndices.emplace_back(w + d * width + width + 1);
         }
     }
-
-    //for(int i = 0; i < mVertices.size(); i++)
-    //{
-    //    if((mVertices.at(i).x < 15.f && mVertices.at(5).x > 10.f) && (mVertices.at(i).z < 15.f && mVertices.at(i).z > 10.f))
-    //    {
-    //        mVertices.push_back(mVertices.at(i));
-    //    }
-    //}
-
-    //qDebug() << "width was changed: " << width;
-
-	//Calculating the normals for the mesh
-    //Function not made yet:
-    //calculateHeighMapNormals();
 }
 
 float HeightMap::calculateBarycentric(const QVector2D& P, const QVector3D& A, const QVector3D& B, const QVector3D& C)
