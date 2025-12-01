@@ -73,11 +73,12 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     // Player
     mObjects.push_back(new Player());                             // init
     mObjects.at(5)->setName("player");                            // name
-    mObjects.at(5)->move(8, 0, -5);                                // move
+    mObjects.at(5)->move(8, 0, -500);                             // move
 
     // Enemy
     mObjects.push_back(new Enemy());
     mObjects.at(6)->setName("enemy");
+    mObjects.at(6)->move(0.f, 100.f, -500.f);
 
     // tree
     mObjects.push_back(new ObjMesh(assetPath + "cylinder.obj"));  // init
@@ -477,14 +478,14 @@ void Renderer::startNextFrame()
             if(heightMapObj)
             {
                 // Player barycentric coordinates
-                float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(5));
-                float deltaY = newY - mObjects.at(5)->getPosition().y();
-                mObjects.at(5)->move(0.f, deltaY, 0.f);
+                // float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(5));
+                // float deltaY = newY - mObjects.at(5)->getPosition().y();
+                // mObjects.at(5)->move(0.f, deltaY, 0.f);
 
-                // Enemy barycentric coordinates
-                float enemyNewY = heightMapObj->getHeightOnMap(enemyPosXZ.x(), enemyPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(6));
-                float enemyDeltaY = enemyNewY - mObjects.at(6)->getPosition().y();
-                mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
+                // // Enemy barycentric coordinates
+                // float enemyNewY = heightMapObj->getHeightOnMap(enemyPosXZ.x(), enemyPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(6));
+                // float enemyDeltaY = enemyNewY - mObjects.at(6)->getPosition().y();
+                // mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
 
 
                 // this check is used for holding the ball a bit above the terrain before you place its starting position
@@ -538,8 +539,9 @@ void Renderer::startNextFrame()
                     }
 
                     /**
-                     *      Ball collision behaviour - flip vector along normal
+                     *      TASK 2.4 - Ball collision behaviour with wall - flip vector along normal
                      *      Collision between ball and plane
+                     *      From equation 9.18 - V_after = V - 2 * (V * n) * n
                      **/
                     if(mObjects.at(9)->getPosition().z() < (-10.f))
                         ballVelocity.setZ(ballVelocity.z() * (-0.8f));
@@ -558,17 +560,18 @@ void Renderer::startNextFrame()
                             ballVelocity.setZ(ballVelocity.z() * (-0.8f));
                         } else if((mObjects.at(9)->getPosition().x() > -1.1f) || (mObjects.at(9)->getPosition().z() < -1.9f))
                         {
-                            qDebug() << "ball is colliding with cube on a x plane!";
+                            qDebug() << "ball is colliding with cube on a X plane!";
                             ballVelocity.setX(ballVelocity.x() * (-0.8f));
                         }
                     }
 
-                    /**
-                     *      TASK 2.7 - Fluid simulation
-                     *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
-                     *      These are expensive calculation as they are written now, so the program will lag
-                     **/
+
                 }
+                /**
+                 *      TASK 2.7 - Fluid simulation
+                 *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
+                 *      These are expensive calculation as they are written now, so the program will lag
+                 **/
                 // for(int i = 0; i < 100; i++)
                 // {
                 //     qDebug() << "this runs";
@@ -626,19 +629,18 @@ void Renderer::startNextFrame()
     {
         //qDebug() << "Ball is inside friction area";
         ballVelocity *= 0.9f;
-        ballVelocity *= 0.95f;
     }
 
-    // Input handling for camera and player movement
+    //// Input handling for camera and player movement
     mVulkanWindow->handleInput();
-    mVulkanWindow->movePlayer();
+    //mVulkanWindow->movePlayer();
 
     /// TASK 2.2 - Interactivity
     mVulkanWindow->moveBall();
 
     // enemy chasing
-    mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
-    mObjects.at(5)->move(0.01f, 0.f, 0.f);
+    //mObjects.at(6)->chase(mObjects.at(5), 0.03f, QVector3D(-2.5, 0, -2.0));
+    //mObjects.at(5)->move(0.01f, 0.f, 0.f);
 
     mCamera.update();               //input can have moved the camera
 
