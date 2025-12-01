@@ -46,7 +46,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new TriangleSurface(assetPath + "data_Export.txt")); // dataset
     mObjects.at(2)->move(-477617, -7461897, 0); // adjust dataset position to fit world
 
-    // smaller dataset for faster load time
+    // SMALLER DATASET FOR FASTER LOAD TIME
     //mObjects.push_back(new TriangleSurface(assetPath + "DatasetV1.txt")); // dataset
     //mObjects.at(2)->move(-486437, -806, -7442439); // adjust dataset position to fit world
 
