@@ -38,7 +38,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(0)->setName("tri");                               // name
     mObjects.at(1)->setName("quad");
     mObjects.at(0)->move(1111, 0, 0);                             // move
-    mObjects.at(1)->setPosition(-25.f, -2.5f, -10.f);
+    mObjects.at(1)->setPosition(-25.f, -2.5f, -100.f);
     mObjects.at(1)->setTextureType(1);
 
     // Axis
@@ -128,7 +128,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
 
     /// TASK 2.4 - static collision obstacle
     mObjects.push_back(new Cube);
-    mObjects.at(14)->setPosition(-2.f, 0.f, -2.5f);
+    mObjects.at(14)->setPosition(-2.f, 0.f, -200.5f);
 
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
     mObjects.at(15)->setPosition(-1.5f, 0.f, -2.5f);
@@ -138,8 +138,8 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     //mObjects.at(16)->setDrawType(0);
 
     /**
-     *      TASK 2.7 - Fluid simulation
-     *      Below, we initialise 100 spheres that all start from different points in a line
+     *      TASK 2.6 - Fluid simulation
+     *      Below, we initialise 100 spheres with their own velocities
      **/
     for(int i = 0; i < 100; i++)
     {
@@ -520,7 +520,7 @@ void Renderer::startNextFrame()
 
                     // Move ball using velocity vector
                     mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
-                    //ballVelocity *= 0.998f; // friction
+                    //ballVelocity *= 0.99f; // friction
 
                     /**
                      *      TASK 2.2 - Ball falls to rest
@@ -570,7 +570,7 @@ void Renderer::startNextFrame()
 
                 }
                 /**
-                 *      TASK 2.7 - Fluid simulation
+                 *      TASK 2.6 - Fluid simulation
                  *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
                  *      These are expensive calculation as they are written now, so the program will lag
                  **/
@@ -601,10 +601,10 @@ void Renderer::startNextFrame()
     }
 
     // activating fluid sim balls gradually each 10th frame
-    if((mFrameCounter % 10 == 0) && mFrameCounter < 1000) // change 1000 to a lower multiple of 10 for less objects
-    {
-       mObjects.at((mFrameCounter / 10) + 16)->activateObj();
-    }
+    // if((mFrameCounter % 10 == 0) && mFrameCounter < 1000) // change 1000 to a lower multiple of 10 for less objects
+    // {
+    //    mObjects.at((mFrameCounter / 10) + 16)->activateObj();
+    // }
 
     /**
      *      TASK 2.5 - Draw ball trace
@@ -612,18 +612,17 @@ void Renderer::startNextFrame()
      *      The trace is technically there in the code, loading in objects at the ball's previous positions,
      *      but the trace is not drawn due to this code not supporting drawing new objects outside of the renderer's initialisation.
      **/
-
-    if(mFrameCounter % 20 == 0) // every 20th frame
-    {
-        qDebug() << "20 frames have passed: ";
-        QVector3D newBallPos {0.f, 0.f, 0.f};
-        newBallPos = mObjects.at(9)->getPosition();
-        mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-        mObjects.at(mObjects.size()-1)->setPosition(newBallPos.x(), newBallPos.y(), newBallPos.z());
-        mObjects.at(mObjects.size()-1)->scale(0.2f);
-        qDebug() << mObjects.size() - 1;
-        qDebug() << mObjects.at(mObjects.size()-1)->getPosition();
-    }
+    //if(mFrameCounter % 20 == 0) // every 20th frame
+    //{
+    //   qDebug() << "20 frames have passed: ";
+    //   QVector3D newBallPos {0.f, 0.f, 0.f};
+    //   newBallPos = mObjects.at(9)->getPosition();
+    //   mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+    //   mObjects.at(mObjects.size()-1)->setPosition(newBallPos.x(), newBallPos.y(), newBallPos.z());
+    //   mObjects.at(mObjects.size()-1)->scale(0.2f);
+    //   qDebug() << mObjects.size() - 1;
+    //   qDebug() << mObjects.at(mObjects.size()-1)->getPosition();
+    //}
 
 
     /**
@@ -634,7 +633,7 @@ void Renderer::startNextFrame()
     if((10.f < ballPosXZ.x() && ballPosXZ.x() < 15.f) && (2.f < ballPosXZ.z() && ballPosXZ.z() < 7.f))
     {
         //qDebug() << "Ball is inside friction area";
-        ballVelocity *= 0.9f;
+        ballVelocity *= 0.95f;
     }
 
     //// Input handling for camera and player movement
