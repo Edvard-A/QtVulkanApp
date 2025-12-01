@@ -39,7 +39,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(1)->setName("quad");
     mObjects.at(0)->move(1111, 0, 0);                             // move
     mObjects.at(1)->setPosition(-25.f, -2.5f, -10.f);
-    mObjects.at(1)->setTextureType(2);
+    mObjects.at(1)->setTextureType(1);
 
     // Axis
     mObjects.push_back((new WorldAxis()));
