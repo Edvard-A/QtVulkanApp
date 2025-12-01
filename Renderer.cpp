@@ -38,7 +38,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(0)->setName("tri");                               // name
     mObjects.at(1)->setName("quad");
     mObjects.at(0)->move(1111, 0, 0);                             // move
-    mObjects.at(1)->setPosition(-25.f, -2.5f, -100.f);
+    mObjects.at(1)->setPosition(-25.f, -2.5f, -10.f);
     mObjects.at(1)->setTextureType(1);
 
     // Axis
@@ -51,18 +51,6 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
     mObjects.at(3)->setTextureType(3);
     mObjects.at(3)->setDrawType(1);
-
-    //for(auto obj : mObjects){
-    //    if(obj->getName() == "terrain")
-    //    {
-    //        HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
-    //        if(heightMapObj)
-    //        {
-    //            qDebug() << "object number: " << obj;
-    //            qDebug() << "map width: " << heightMapObj->getWidth();
-    //        }
-    //    }
-    //}
 
     // Suzanne
     mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));   // init
@@ -101,83 +89,20 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
 
     /// TASK 2.3 - Spheres for visualising friction area bounds
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); //10
-    mObjects.at(10)->move(10.f, 3.5f, 2.f);
+    mObjects.at(10)->move(1000.f, 3.5f, 200.f);
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 11
-    mObjects.at(11)->move(15.f, 3.5f, 2.f);
+    mObjects.at(11)->move(1500.f, 3.5f, 200.f);
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 12
-    mObjects.at(12)->move(10.f, 3.5f, 7.f);
+    mObjects.at(12)->move(1000.f, 3.5f, 700.f);
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj")); // 13
-    mObjects.at(13)->move(15.f, 3.5f, 7.f);
-
-    // place corners of friction area down on the surface
-    for(auto obj : mObjects){
-        if(obj->getName() == "terrain")
-        {
-            HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
-            if(heightMapObj)
-            {
-                for(int i = 10; i < 14; i++)
-                {
-                    float areaNewY = heightMapObj->getHeightOnMap(mObjects.at(i)->getPosition().x(), mObjects.at(i)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i));
-                    float areaDeltaY = areaNewY - mObjects.at(i)->getPosition().y();
-                    mObjects.at(i)->move(0.f, areaDeltaY, 0.f);
-                }
-            }
-        }
-    }
+    mObjects.at(13)->move(1500.f, 3.5f, 700.f);
 
     /// TASK 2.4 - static collision obstacle
     mObjects.push_back(new Cube);
-    mObjects.at(14)->setPosition(-2.f, 0.f, -200.5f);
+    mObjects.at(14)->setPosition(-2.f, 0.f, -2.5f);
 
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-    mObjects.at(15)->setPosition(-1.5f, 0.f, -2.5f);
-
-    //// triangulation example
-    //mObjects.push_back(new TriangleSurface("C:\\Users\\edvar\\Documents\\HINN\\Visualisation&Simulation\\Exam\\triangulationExample.txt"));
-    //mObjects.at(16)->setDrawType(0);
-
-    /**
-     *      TASK 2.6 - Fluid simulation
-     *      Below, we initialise 100 spheres with their own velocities
-     **/
-    for(int i = 0; i < 100; i++)
-    {
-        mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-        mObjects.at(mObjects.size() - 1)->setTextureType(1);
-        fluidVelocities.push_back(QVector3D{(float)i / 7200.f, 0.f, 0.f});
-    }
-
-    // Triangulated Surface
-
-
-    //for(int i; i < 10000; i++)
-    //{
-    //    if(mObjects.at(3)->getIndices()[i])
-    //        qDebug() << i;
-    //    else
-    //        qDebug() << 0;
-    //}
-
-    //QVector3D treeXZ = QVector3D(mObjects.at(7)->getPosition().x(), 0.f, mObjects.at(7)->getPosition().z());
-    //for(auto obj : mObjects){
-    //    if(obj->getName() == "terrain")
-    //    {
-    //        HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
-    //        if(heightMapObj)
-    //        {
-    //            //qDebug() << "map width: " << heightMapObj->getWidth();
-
-    //            float newY = heightMapObj->getHeightOnMap(treeXZ.x(), treeXZ.z(), mObjects.at(3)->getVertices());
-    //            //qDebug() << "new Y is: " << newY;
-    //            float deltaY = newY - mObjects.at(7)->getPosition().y();
-
-    //            //qDebug() << "delta Y is: " << deltaY;
-    //            mObjects.at(7)->move(0.f, deltaY, 0.f);
-    //        }
-    //    }
-
-    //}
+    mObjects.at(15)->setPosition(-1.5f, 0.f, -2000.5f);
 
 
     //mObjects.at(8)->move(mObjects.at(7)->getPosition().x(),mObjects.at(7)->getPosition().y(), mObjects.at(7)->getPosition().z());
@@ -476,17 +401,6 @@ void Renderer::startNextFrame()
             HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
             if(heightMapObj)
             {
-                // Player barycentric coordinates
-                // float newY = heightMapObj->getHeightOnMap(posXZ.x(), posXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(5));
-                // float deltaY = newY - mObjects.at(5)->getPosition().y();
-                // mObjects.at(5)->move(0.f, deltaY, 0.f);
-
-                // // Enemy barycentric coordinates
-                // float enemyNewY = heightMapObj->getHeightOnMap(enemyPosXZ.x(), enemyPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(6));
-                // float enemyDeltaY = enemyNewY - mObjects.at(6)->getPosition().y();
-                // mObjects.at(6)->move(0.f, enemyDeltaY, 0.f);
-
-
                 // this check is used for holding the ball a bit above the terrain before you place its starting position
                 if(!isGameStarted)
                 {
@@ -523,22 +437,6 @@ void Renderer::startNextFrame()
                     //ballVelocity *= 0.99f; // friction
 
                     /**
-                     *      TASK 2.2 - Ball falls to rest
-                     *      We check if the absolute value of the velocity is lower than a chosen threshold
-                     *      and then stop the ball completely if it is.
-                     *      stopGame() sets the game state to false and allows us to reposition the ball again
-                     **/
-                    //QVector3D currentNormal = heightMapObj->calculateUnitNormal(currentTri[0], currentTri[1], currentTri[2]);
-                    QVector2D ballABSVelocity = { sqrt(ballVelocity.x() * ballVelocity.x()), sqrt(ballVelocity.z() * ballVelocity.z()) };
-                    if((ballABSVelocity.x() < 0.0001f && ballABSVelocity.y() < 0.0001f) /*&& currentNormal.y() == 1*/)
-                    {
-                        qDebug() << "ball should stop";
-                        accVec = {0.f, 0.f, 0.f};
-                        ballVelocity = {0.f, 0.f, 0.f};
-                        stopGame();
-                    }
-
-                    /**
                      *      TASK 2.4 - Ball collision behaviour with wall - flip vector along normal
                      *      Collision between ball and plane
                      *      From equation 9.18 - V_after = V - 2 * (V * n) * n
@@ -566,74 +464,9 @@ void Renderer::startNextFrame()
                             ballVelocity.setX(ballVelocity.x() * (-0.8f));
                         }
                     }
-
-
-                }
-                /**
-                 *      TASK 2.6 - Fluid simulation
-                 *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
-                 *      These are expensive calculation as they are written now, so the program will lag
-                 **/
-                for(int i = 0; i < 100; i++)
-                {
-                    if(mObjects.at(i + 16)->getActiveState())
-                    {
-                        std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 16)->getPosition().x(),
-                                                                                      mObjects.at(i + 16)->getPosition().z(),
-                                                                                      mObjects.at(3)->getVertices(), mObjects.at(i + 16));
-
-                        QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-                        fluidVelocities.at(i) += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
-
-                        mObjects.at(i + 16)->move(fluidVelocities.at(i).x(), 0.0f, fluidVelocities.at(i).z());
-
-                        float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 16)->getPosition().x(),
-                                                                       mObjects.at(i + 16)->getPosition().z(),
-                                                                       mObjects.at(3)->getVertices(),
-                                                                       mObjects.at(i + 16));
-
-                        float fluidDeltaY = fluidNewY - mObjects.at(i + 16)->getPosition().y();
-                        mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
-                    }
                 }
             }
         }
-    }
-
-    // activating fluid sim balls gradually each 10th frame
-    // if((mFrameCounter % 10 == 0) && mFrameCounter < 1000) // change 1000 to a lower multiple of 10 for less objects
-    // {
-    //    mObjects.at((mFrameCounter / 10) + 16)->activateObj();
-    // }
-
-    /**
-     *      TASK 2.5 - Draw ball trace
-     *      This function is called every 20th frame, and draws a point for at the ball's previous recorded position.
-     *      The trace is technically there in the code, loading in objects at the ball's previous positions,
-     *      but the trace is not drawn due to this code not supporting drawing new objects outside of the renderer's initialisation.
-     **/
-    //if(mFrameCounter % 20 == 0) // every 20th frame
-    //{
-    //   qDebug() << "20 frames have passed: ";
-    //   QVector3D newBallPos {0.f, 0.f, 0.f};
-    //   newBallPos = mObjects.at(9)->getPosition();
-    //   mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-    //   mObjects.at(mObjects.size()-1)->setPosition(newBallPos.x(), newBallPos.y(), newBallPos.z());
-    //   mObjects.at(mObjects.size()-1)->scale(0.2f);
-    //   qDebug() << mObjects.size() - 1;
-    //   qDebug() << mObjects.at(mObjects.size()-1)->getPosition();
-    //}
-
-
-    /**
-     *      TASK 2.3 - Friction
-     *      We initialise a defined area of the surface where the friction is noticeably higher.
-     *      This area is visualised using four spheres as corners rendered on the surface.
-     **/
-    if((10.f < ballPosXZ.x() && ballPosXZ.x() < 15.f) && (2.f < ballPosXZ.z() && ballPosXZ.z() < 7.f))
-    {
-        //qDebug() << "Ball is inside friction area";
-        ballVelocity *= 0.95f;
     }
 
     //// Input handling for camera and player movement
