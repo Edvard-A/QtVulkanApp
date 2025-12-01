@@ -543,8 +543,10 @@ void Renderer::startNextFrame()
                      *      Collision between ball and plane
                      *      From equation 9.18 - V_after = V - 2 * (V * n) * n
                      **/
-                    if(mObjects.at(9)->getPosition().z() < (-10.f))
-                        ballVelocity.setZ(ballVelocity.z() * (-0.8f));
+                    if(mObjects.at(9)->getPosition().z() < mObjects.at(1)->getPosition().z())
+                        ballVelocity = ballVelocity - 2 *
+                                       (ballVelocity * QVector3D{0.f, 0.f, 1.f}) *
+                                       QVector3D{0.f, 0.f, 1.f} * 0.8f; // multiply by 0.8f to have velocity falloff
 
                     /**
                      *      TASK 2.4 - Ball collision detection & behaviour with cube
