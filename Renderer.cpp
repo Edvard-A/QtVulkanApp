@@ -38,7 +38,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(0)->setName("tri");                               // name
     mObjects.at(1)->setName("quad");
     mObjects.at(0)->move(1111, 0, 0);                             // move
-    mObjects.at(1)->setPosition(-25.f, -2.5f, -100.f);
+    mObjects.at(1)->setPosition(-25.f, -2.5f, -10.f);
     mObjects.at(1)->setTextureType(1);
 
     // Axis
@@ -128,10 +128,10 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
 
     /// TASK 2.4 - static collision obstacle
     mObjects.push_back(new Cube);
-    mObjects.at(14)->setPosition(-2.f, 0.f, -200.5f);
+    mObjects.at(14)->setPosition(-2.f, 0.f, -2.5f);
 
     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-    mObjects.at(15)->setPosition(-1.5f, 0.f, -2.5f);
+    mObjects.at(15)->setPosition(-100.5f, 0.f, -2.5f);
 
     //// triangulation example
     //mObjects.push_back(new TriangleSurface("C:\\Users\\edvar\\Documents\\HINN\\Visualisation&Simulation\\Exam\\triangulationExample.txt"));
@@ -141,12 +141,12 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
      *      TASK 2.6 - Fluid simulation
      *      Below, we initialise 100 spheres with their own velocities
      **/
-    for(int i = 0; i < 100; i++)
-    {
-        mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-        mObjects.at(mObjects.size() - 1)->setTextureType(1);
-        fluidVelocities.push_back(QVector3D{(float)i / 7200.f, 0.f, 0.f});
-    }
+    // for(int i = 0; i < 100; i++)
+    // {
+    //     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+    //     mObjects.at(mObjects.size() - 1)->setTextureType(1);
+    //     fluidVelocities.push_back(QVector3D{(float)i / 7200.f, 0.f, 0.f});
+    // }
 
     // Triangulated Surface
 
@@ -574,28 +574,28 @@ void Renderer::startNextFrame()
                  *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
                  *      These are expensive calculation as they are written now, so the program will lag
                  **/
-                for(int i = 0; i < 100; i++)
-                {
-                    if(mObjects.at(i + 16)->getActiveState())
-                    {
-                        std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 16)->getPosition().x(),
-                                                                                      mObjects.at(i + 16)->getPosition().z(),
-                                                                                      mObjects.at(3)->getVertices(), mObjects.at(i + 16));
+                // for(int i = 0; i < 100; i++)
+                // {
+                //     if(mObjects.at(i + 16)->getActiveState())
+                //     {
+                //         std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 16)->getPosition().x(),
+                //                                                                       mObjects.at(i + 16)->getPosition().z(),
+                //                                                                       mObjects.at(3)->getVertices(), mObjects.at(i + 16));
 
-                        QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-                        fluidVelocities.at(i) += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
+                //         QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
+                //         fluidVelocities.at(i) += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
 
-                        mObjects.at(i + 16)->move(fluidVelocities.at(i).x(), 0.0f, fluidVelocities.at(i).z());
+                //         mObjects.at(i + 16)->move(fluidVelocities.at(i).x(), 0.0f, fluidVelocities.at(i).z());
 
-                        float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 16)->getPosition().x(),
-                                                                       mObjects.at(i + 16)->getPosition().z(),
-                                                                       mObjects.at(3)->getVertices(),
-                                                                       mObjects.at(i + 16));
+                //         float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 16)->getPosition().x(),
+                //                                                        mObjects.at(i + 16)->getPosition().z(),
+                //                                                        mObjects.at(3)->getVertices(),
+                //                                                        mObjects.at(i + 16));
 
-                        float fluidDeltaY = fluidNewY - mObjects.at(i + 16)->getPosition().y();
-                        mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
-                    }
-                }
+                //         float fluidDeltaY = fluidNewY - mObjects.at(i + 16)->getPosition().y();
+                //         mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
+                //     }
+                // }
             }
         }
     }
