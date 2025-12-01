@@ -141,13 +141,12 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
      *      TASK 2.7 - Fluid simulation
      *      Below, we initialise 100 spheres that all start from different points in a line
      **/
-    // for(int i = 0; i < 100; i++)
-    // {
-    //     mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
-    //     mObjects.at(mObjects.size() - 1)->setTextureType(1);
-    //     mObjects.at(mObjects.size() - 1)->scale(0.5f);
-    //     //mObjects.at(mObjects.size() - 1)->move(i * 0.02f, 0.f, 0.f);
-    // }
+    for(int i = 0; i < 100; i++)
+    {
+        mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+        mObjects.at(mObjects.size() - 1)->setTextureType(1);
+        fluidVelocities.push_back(QVector3D{(float)i / 7200.f, 0.f, 0.f});
+    }
 
     // Triangulated Surface
 
@@ -572,26 +571,36 @@ void Renderer::startNextFrame()
                  *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
                  *      These are expensive calculation as they are written now, so the program will lag
                  **/
-                // for(int i = 0; i < 100; i++)
-                // {
-                //     qDebug() << "this runs";
-                //     std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 16)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 16));
+                for(int i = 0; i < 100; i++)
+                {
+                    if(mObjects.at(i + 16)->getActiveState())
+                    {
+                        std::vector<QVector3D> currentTri = heightMapObj->getTriangle(mObjects.at(i + 16)->getPosition().x(),
+                                                                                      mObjects.at(i + 16)->getPosition().z(),
+                                                                                      mObjects.at(3)->getVertices(), mObjects.at(i + 16));
 
-                //     QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-                //     fluidVelocity += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
-                //     mObjects.at(i + 16)->move(fluidVelocity.x(), fluidVelocity.y(), fluidVelocity.z());
+                        QVector3D fluidAccVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
+                        fluidVelocities.at(i) += {fluidAccVec.x()/720.0f, 0.0f, fluidAccVec.z()/720.0f};
 
-                //     float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 16)->getPosition().x(), mObjects.at(i + 9)->getPosition().z(), mObjects.at(3)->getVertices(), mObjects.at(i + 16));
-                //     //qDebug() << "fluid new Y: " << fluidNewY;
-                //     float fluidDeltaY = fluidNewY - mObjects.at(i + 16)->getPosition().y();
-                //     if(mObjects.at(i + 16)->getActiveState())
-                //     {
-                //         mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
-                //     }
-                //     //mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
-                // }
+                        mObjects.at(i + 16)->move(fluidVelocities.at(i).x(), 0.0f, fluidVelocities.at(i).z());
+
+                        float fluidNewY = heightMapObj->getHeightOnMap(mObjects.at(i + 16)->getPosition().x(),
+                                                                       mObjects.at(i + 16)->getPosition().z(),
+                                                                       mObjects.at(3)->getVertices(),
+                                                                       mObjects.at(i + 16));
+
+                        float fluidDeltaY = fluidNewY - mObjects.at(i + 16)->getPosition().y();
+                        mObjects.at(i + 16)->move(0.f, fluidDeltaY, 0.f);
+                    }
+                }
             }
         }
+    }
+
+    // activating fluid sim balls gradually each 10th frame
+    if((mFrameCounter % 10 == 0) && mFrameCounter < 1000) // change 1000 to a lower multiple of 10 for less objects
+    {
+       mObjects.at((mFrameCounter / 10) + 16)->activateObj();
     }
 
     /**
@@ -600,12 +609,6 @@ void Renderer::startNextFrame()
      *      The trace is technically there in the code, loading in objects at the ball's previous positions,
      *      but the trace is not drawn due to this code not supporting drawing new objects outside of the renderer's initialisation.
      **/
-
-    // activating fluid sim balls gradually each 10th frame
-    //if((mFrameCounter % 10 == 0) && mFrameCounter < 1000)
-    //{
-    //    mObjects.at((mFrameCounter / 10) + 16)->activateObj();
-    //}
 
     if(mFrameCounter % 20 == 0) // every 20th frame
     {

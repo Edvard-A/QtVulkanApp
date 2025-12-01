@@ -140,7 +140,7 @@ private:
     } mColorMaterial;
 
     int mFrameCounter = 0;
-    QVector3D fluidVelocity{ 0.f, 0.f, 0.f};
+    std::vector<QVector3D> fluidVelocities;
 };
 
 #endif // RENDERER_H
