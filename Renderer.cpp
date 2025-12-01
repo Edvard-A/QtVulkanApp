@@ -459,34 +459,6 @@ void Renderer::startNextFrame()
             HeightMap* heightMapObj = static_cast<HeightMap*>(obj);
             if(heightMapObj)
             {
-
-                if(isGameStarted)
-                {
-
-                    /**
-                     *      TASK 2.1 - Ball rolling on surface
-                     *      This algorhithm is adapted from the VISIM 2025 lecture notes using equation 9.14 in chapter 9.4 - Simulering av rullende ball
-                     **/
-                    // Ball barycentric coordinates
-                    float ballNewY = heightMapObj->getHeightOnMap(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
-                    float ballDeltaY = ballNewY - mObjects.at(9)->getPosition().y();
-                    mObjects.at(9)->move(0.0f, ballDeltaY, 0.0f);
-
-                    /// Ball rolling
-                    // Checking which triangle the ball is on in the XZ plane
-                    std::vector<QVector3D> currentTri = heightMapObj->getTriangle(ballPosXZ.x(), ballPosXZ.z(), mObjects.at(3)->getVertices(), mObjects.at(9));
-
-                    // Find the acceleration vector for that triangle
-                    QVector3D accVec = heightMapObj->calculateAccelerationVec(currentTri[0], currentTri[1], currentTri[2]);
-
-                    // Adjust velocity vector according to acceleration vector for current triangle
-                    ballVelocity += {accVec.x()/ 3600.f, 0.f, accVec.z() / 3600.f};
-
-                    // Move ball using velocity vector
-                    mObjects.at(9)->move((ballVelocity.x()), (ballVelocity.y()), (ballVelocity.z()));
-                    //ballVelocity *= 0.99f; // friction
-
-                }
                 /**
                  *      TASK 2.6 - Fluid simulation
                  *      We initialise 100 balls and move them along the terrain using the same algorhithm as in task 2.1.
