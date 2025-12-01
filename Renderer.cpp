@@ -27,17 +27,28 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     }
 
     mObjects.push_back(new Triangle());
-    mObjects.push_back((new TriangleSurface()));
+    mObjects.at(0)->move(-477617, -7461897, 7461897);
+    // mObjects.push_back((new TriangleSurface()));
     mObjects.push_back((new WorldAxis()));
-	mObjects.push_back(new HeightMap());
-    mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));
+    // //mObjects.push_back(new HeightMap());
+    // mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));
     // Dag 030225
-    mObjects.at(0)->setName("tri");
-    mObjects.at(1)->setName("quad");
-    mObjects.at(2)->setName("axis");
-	mObjects.at(3)->setName("terrain");
-    mObjects.at(4)->setName("suzanne");
-    static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
+    //    mObjects.at(0)->setName("tri");
+    //    mObjects.at(1)->setName("quad");
+    //    mObjects.at(2)->setName("axis");
+    // mObjects.at(3)->setName("terrain");
+    //mObjects.at(4)->setName("suzanne");
+    //static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
+
+    /**
+     *      TASK 1.2 - Render point cloud into scene and translate/scale accordingly
+     **/
+    mObjects.push_back(new TriangleSurface(assetPath + "data_Export.txt")); // dataset
+    mObjects.at(2)->move(-477617, -7461897, 0); // adjust dataset position to fit world
+
+    // smaller dataset for faster load time
+    //mObjects.push_back(new TriangleSurface(assetPath + "DatasetV1.txt")); // dataset
+    //mObjects.at(2)->move(-486437, -806, -7442439); // adjust dataset position to fit world
 
     // **************************************
     // Objects in optional map
@@ -45,8 +56,8 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     for (auto it=mObjects.begin(); it!=mObjects.end(); it++)
         mMap.insert(std::pair<std::string, VisualObject*>{(*it)->getName(),*it});
 
-	//Inital position of the camera
-    mCamera.setPosition(QVector3D(-0.5, -0.5, -8));
+    //Inital position of the camera
+    mCamera.setPosition(QVector3D(-0.5, -0.5, -800));
 
     //Need access to our VulkanWindow so making a convenience pointer
     mVulkanWindow = dynamic_cast<VulkanWindow*>(w);
@@ -206,7 +217,7 @@ void Renderer::initResources()
 	// **** Rasterizer **** - takes the geometry and turns it into fragments
     VkPipelineRasterizationStateCreateInfo rasterization{};
     rasterization.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-    rasterization.polygonMode = VK_POLYGON_MODE_FILL;           // VK_POLYGON_MODE_LINE will make a wireframe;
+    rasterization.polygonMode = VK_POLYGON_MODE_POINT;           // VK_POLYGON_MODE_LINE will make a wireframe;
     rasterization.cullMode = VK_CULL_MODE_NONE;                 // VK_CULL_MODE_BACK_BIT will cull backsides
 	rasterization.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;  // Front face is counter clockwise - could be clockwise with VK_FRONT_FACE_CLOCKWISE
     rasterization.lineWidth = 1.0f;                             // Not important for VK_POLYGON_MODE_FILL
@@ -284,7 +295,7 @@ void Renderer::initResources()
     // Create the texture sampler
     createTextureSampler();
 
-    mTextureHandle = createTexture((assetPath + "Hund.bmp")); //Heightmap.jpg HundA.bmp
+    mTextureHandle = createTexture((assetPath + "pink.jpg")); //Heightmap.jpg HundA.bmp
     //mTextureHandle = createTexture((assetPath + "green-grass-texture.jpg").c_str());
 
     // getVulkanHWInfo(); // if you want to get info about the Vulkan hardware
@@ -350,7 +361,7 @@ void Renderer::startNextFrame()
     mDeviceFunctions->vkCmdEndRenderPass(commandBuffer);
 
     //Hardcoded!!!
-    mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);
+    //mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);
     
     mWindow->frameReady();
     mWindow->requestUpdate(); // render continuously, throttled by the presentation rate
