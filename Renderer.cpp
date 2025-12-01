@@ -533,6 +533,7 @@ void Renderer::startNextFrame()
                     if((ballABSVelocity.x() < 0.0001f && ballABSVelocity.y() < 0.0001f) /*&& currentNormal.y() == 1*/)
                     {
                         qDebug() << "ball should stop";
+                        accVec = {0.f, 0.f, 0.f};
                         ballVelocity = {0.f, 0.f, 0.f};
                         stopGame();
                     }
